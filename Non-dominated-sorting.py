@@ -28,25 +28,27 @@ def identify_pareto_observations(book):
                                       ascending=[False, False, True])
     # fitness_values = pd.DataFrame({'RES%':[1,1,1], 'GFA-m2': [0,1,-1], 'PDG-Kwh':[1,1,-1]})
     print (fitness_values)
-    a = fitness_values.idxmin(axis = 0)
-    b = a['RES%']
-    print (fitness_values['RES%'][b])
-    pareto_frontier_RESp.append(fitness_values['RES%'][b])
-    pareto_frontier_GFA.append(fitness_values['GFA-m2'][b])
-    pareto_frontier_PDG.append(fitness_values['PDG-Kwh'][b])
-    # pareto_frontier_d.append(fitness_values['d'][b])
-    # pareto_frontier_w.append(fitness_values['w'][b])
-    # pareto_frontier_r.append(fitness_values['r'][b])
-    # pareto_frontier_RES.append(fitness_values['RES'][b])
-    # pareto_frontier_COM.append(fitness_values['COM'][b])
-    # pareto_frontier_OFF.append(fitness_values['OFF'][b])
-
+    print (book)
+    a = fitness_values['RES%'].idxmax(axis = 0)
+    b = a
+    print (book['RES'][b])
+    print (fitness_values['RES'][b])
+    pareto_frontier_RESp.append(book['RES%'][b])
+    pareto_frontier_GFA.append(book['GFA-m2'][b])
+    pareto_frontier_PDG.append(book['PDG-Kwh'][b])
+    pareto_frontier_d.append(book['d'][b])
+    pareto_frontier_w.append(book['w'][b])
+    pareto_frontier_r.append(book['r'][b])
+    pareto_frontier_RES.append(book['RES'][b])
+    pareto_frontier_COM.append(book['COM'][b])
+    pareto_frontier_OFF.append(book['OFF'][b])
+    print (len(fitness_values))
     for row in xrange(0, len(fitness_values)):
         dominated = False
         for j in xrange(0, len(pareto_frontier_RESp)):
-            if (pareto_frontier_RESp[j] <= fitness_values['RES%'][row]):
-                if (pareto_frontier_GFA[j] <= fitness_values['GFA-m2'][row]):
-                    if (pareto_frontier_PDG[j] >= fitness_values['PDG-Kwh'][row]):
+            if (pareto_frontier_RESp[j] >= fitness_values['RES%'][row]):  # maximizing RES%
+                if (pareto_frontier_GFA[j] >= fitness_values['GFA-m2'][row]):  # maximizing GFA-m2
+                    if (pareto_frontier_PDG[j] <= fitness_values['PDG-Kwh'][row]):  # minimizing PDG-Kwh
                         print (pareto_frontier_PDG[j], pareto_frontier_GFA[j], pareto_frontier_RESp[j])
                         print (fitness_values['PDG-Kwh'][row], fitness_values['GFA-m2'][row],fitness_values['RES%'][row])
                         dominated = True
@@ -55,23 +57,19 @@ def identify_pareto_observations(book):
             pareto_frontier_RESp.append(fitness_values['RES%'][row])
             pareto_frontier_GFA.append(fitness_values['GFA-m2'][row])
             pareto_frontier_PDG.append(fitness_values['PDG-Kwh'][row])
-            # pareto_frontier_d.append(fitness_values['d'][row])
-            # pareto_frontier_w.append(fitness_values['w'][row])
-            # pareto_frontier_r.append(fitness_values['r'][row])
-            # pareto_frontier_RES.append(fitness_values['RES'][row])
-            # pareto_frontier_COM.append(fitness_values['COM'][row])
-            # pareto_frontier_OFF.append(fitness_values['OFF'][row])
-
-    print (len(pareto_frontier_RESp))
-    print (len(pareto_frontier_GFA))
-    print (len(pareto_frontier_PDG))
+            pareto_frontier_d.append(fitness_values['d'][row])
+            pareto_frontier_w.append(fitness_values['w'][row])
+            pareto_frontier_r.append(fitness_values['r'][row])
+            pareto_frontier_RES.append(fitness_values['RES'][row])
+            pareto_frontier_COM.append(fitness_values['COM'][row])
+            pareto_frontier_OFF.append(fitness_values['OFF'][row])
 
     # print (type(pareto_frontier_RES))
-    # pareto_frontier = pd.DataFrame({'RES%': pareto_frontier_RESp, 'GFA': pareto_frontier_GFA, 'PDG': pareto_frontier_PDG,
-    #                                 'r': pareto_frontier_r, 'w': pareto_frontier_w, 'd': pareto_frontier_d,
-    #                                 'RES': pareto_frontier_RES, 'COM': pareto_frontier_COM, 'OFF': pareto_frontier_OFF})
-    pareto_frontier = pd.DataFrame(
-        {'RES%': pareto_frontier_RESp, 'GFA': pareto_frontier_GFA, 'PDG': pareto_frontier_PDG})
+    pareto_frontier = pd.DataFrame({'RES%': pareto_frontier_RESp, 'GFA-m2': pareto_frontier_GFA, 'PDG-Kwh': pareto_frontier_PDG,
+                                    'r': pareto_frontier_r, 'w': pareto_frontier_w, 'd': pareto_frontier_d,
+                                    'RES': pareto_frontier_RES, 'COM': pareto_frontier_COM, 'OFF': pareto_frontier_OFF})
+    # pareto_frontier = pd.DataFrame(
+    #     {'RES%': pareto_frontier_RESp, 'GFA': pareto_frontier_GFA, 'PDG': pareto_frontier_PDG})
     pareto_frontier.to_csv('C:\Users\Bhargava\Downloads\\abc.csv')
     print (pareto_frontier)
     return pareto_frontier_RES
