@@ -80,7 +80,7 @@ def identify_pareto_observations(book):
 if __name__ == '__main__':
 
     pop = []
-    book = pd.read_excel(open('C:\Users\Bhargava\Downloads\Solar_DDD_5.xlsx', 'rb'))
+    book = pd.read_excel(open('C:\Users\Bhargava\Downloads\Solar_DDD_20.xlsx', 'rb'))
     # del book['d']
     # del book['w']
     # del book['r']
