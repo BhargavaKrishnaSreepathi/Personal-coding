@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8ec9d6e4-8a45-43e8-8520-c663d01d9909" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/EMOO version 3b Osyczka Sorting.xls" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/FNDomSort.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/Rank.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/RunMyMOO.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/calcCrowdingDistance.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/calcDominationMatrix.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/calcPreferenceDistance.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/check_SM.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/crowding.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/dominance.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/extractPop.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/fill_f.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/fn_IMODE.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/fndsort.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/initpop.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/ndsort.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/selectOp.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/temp_C.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/temp_H.R" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MODE-R/variables_file_ex3.R" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IMODE/__init__.py" afterPath="$PROJECT_DIR$/MODE-python/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="8ec9d6e4-8a45-43e8-8520-c663d01d9909" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
