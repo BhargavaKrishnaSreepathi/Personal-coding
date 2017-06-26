@@ -1,0 +1,1 @@
+calPreferenceDistance <- function(PopArray,front1)
