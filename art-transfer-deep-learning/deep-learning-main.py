@@ -25,7 +25,7 @@ tf.enable_eager_execution()
 print("Eager execution: {}".format(tf.executing_eagerly()))
 
 content_path = 'C:/Users\krish\Documents\GitHub\Personal-coding/art-transfer-deep-learning/Green_Sea_Turtle_grazing_seagrass.jpg'
-style_path = 'C:/Users\krish\Documents\GitHub\Personal-coding/art-transfer-deep-learning/The_Great_Wave_off_Kanagawa.jpg'
+style_path = 'C:/Users\krish\Documents\GitHub\Personal-coding/art-transfer-deep-learning/Mona_Lisa.jpg'
 
 
 def load_img(path_to_img):
