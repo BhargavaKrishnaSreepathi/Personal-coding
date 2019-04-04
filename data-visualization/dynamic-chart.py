@@ -32,20 +32,26 @@ def data_function(i):
     # line.set_data(df['country_names'], df['GDP'])
     return df
 
-df = data_function(2015)
-# anim = animation.FuncAnimation(fig, data_function, init_func=init,
-#                                frames=100, interval=20, blit=True)
-df['GDP_bn'] = round(df['GDP']/1000000000.0)
+for i in range(1966, 2016):
+    df = data_function(i)
+    # anim = animation.FuncAnimation(fig, data_function, init_func=init,
+    #                                frames=100, interval=20, blit=True)
+    df['GDP_bn'] = round(df['GDP']/1000000000.0)
 
-plt.barh(df['country_names'], df['GDP_bn'])
-# plt.yticks(y_pos, objects)
-# plt.xlabel('Usage')
-ax.xaxis.set_visible(False)
+    plt.barh(df['country_names'], df['GDP_bn'])
+    # plt.yticks(y_pos, objects)
+    # plt.xlabel('Usage')
+    ax.xaxis.set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.5)
 
-for i, v in enumerate(df['GDP_bn']):
-    ax.text(v + 3, i + .25, str(v), color='blue', fontweight='bold',horizontalalignment='left',
-                verticalalignment='top')
-plt.title('GDP figures')
-plt.legend(loc='upper right', bbox_to_anchor=(1.4, 1), frameon=False)
+    for i, v in enumerate(df['GDP_bn']):
+        ax.text(v + 3, i + .25, str(v), color='blue', fontweight='bold',horizontalalignment='left',
+                    verticalalignment='top')
+    plt.title('GDP figures')
+    plt.legend(loc='upper right', bbox_to_anchor=(1.4, 1), frameon=False)
 
 plt.show()
