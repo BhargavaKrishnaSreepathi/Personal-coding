@@ -20,12 +20,27 @@
 
 #from pyspark.sql import SQLContext
 # url = "https://raw.githubusercontent.com/thomaspernet/data_csv_r/master/data/adult.csv"
-url = r"C:\Users\krish\Downloads/2017_Green_Taxi_Trip_Data.csv"
 from pyspark import SparkFiles, SparkContext, SQLContext
+
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.pipeline import Pipeline, PipelineModel
+from pyspark.ml.classification import RandomForestClassifier
+from pyspark.ml.classification import DecisionTreeClassifier
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+
+url = r"C:\Users\krish\Downloads/2017_Green_Taxi_Trip_Data.csv"
 
 sc =SparkContext()
 sc.addFile(url)
 sqlContext = SQLContext(sc)
 df = sqlContext.read.csv(SparkFiles.get("2017_Green_Taxi_Trip_Data.csv"), header=True, inferSchema= True)
 # df = sqlContext.read.csv(SparkFiles.get("adult.csv"), header=True, inferSchema= True)
-print (df.take(50))
+print (df.limit(10).toPandas())
+print (df.columns)
+print (df.count())
+print (df.describe().show())
+
+df_jan = df.filter(df("lpep_pickup_datetime").lt(lit("2017-01-01")))
+print (df_jan.count())
+
+# dfArray = [df.where(df.ID == x) for x in listids]
