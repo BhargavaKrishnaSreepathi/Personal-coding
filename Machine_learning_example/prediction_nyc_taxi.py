@@ -1,8 +1,8 @@
 # Use this code to predict the percentage tip expected after a trip in NYC green taxi
-# The code is a predictive model that was built and trained on top of the Gradient Boosting Classifer and 
+# The code is a predictive model that was built and trained on top of the Gradient Boosting Classifer and
 # the Random Forest Gradient both provided in scikit-learn
 
-# The input: 
+# The input:
 #    pandas.dataframe with columns: This should be in the same format as downloaded from the website
 
 # The data frame go through the following pipeliine:
@@ -52,30 +52,30 @@ def __clean_data__(adata):
 
     input:
         adata: pandas.dataframe
-    output: 
+    output:
         pandas.dataframe
     """
     ## make a copy of the input
     data = adata.copy()
     ## drop Ehail_fee: 99% of its values are NaNs
-    if 'Ehail_fee' in data.columns:
-        data.drop('Ehail_fee', axis=1, inplace=True)
+    if 'ehail_fee' in data.columns:
+        data.drop('ehail_fee', axis=1, inplace=True)
 
     ##  replace missing values in Trip_type with the most frequent value 1
-    data['trip_type '] = data['trip_type '].replace(np.NaN, 1)
+    data['trip_type'] = data['trip_type'].replace(np.NaN, 1)
 
     ## replace all values that are not allowed as per the variable dictionary with the most frequent allowable value
     # remove negative values from Total amound and Fare_amount
-    data.Total_amount = data.Total_amount.abs()
-    data.Fare_amount = data.Fare_amount.abs()
+    data.total_amount = data.total_amount.abs()
+    data.fare_amount = data.fare_amount.abs()
     data.improvement_surcharge = data.improvement_surcharge.abs()
-    data.Tip_amount = data.Tip_amount.abs()
-    data.Tolls_amount = data.Tolls_amount.abs()
-    data.MTA_tax = data.MTA_tax.abs()
+    data.tip_amount = data.tip_amount.abs()
+    data.tolls_amount = data.tolls_amount.abs()
+    data.mta_tax = data.mta_tax.abs()
 
     # RateCodeID
-    indices_oi = data[~((data.RateCodeID >= 1) & (data.RateCodeID <= 6))].index
-    data.loc[indices_oi, 'RateCodeID'] = 2  # 2 = Cash payment was identified as the common method
+    indices_oi = data[~((data.RatecodeID >= 1) & (data.RatecodeID <= 6))].index
+    data.loc[indices_oi, 'RatecodeID'] = 2  # 2 = Cash payment was identified as the common method
 
     # Extra
     indices_oi = data[~((data.extra == 0) | (data.extra == 0.5) | (data.extra == 1))].index
@@ -83,7 +83,7 @@ def __clean_data__(adata):
 
     # Total_amount: the minimum charge is 2.5, so I will replace every thing less than 2.5 by the median 11.76 (pre-obtained in analysis)
     indices_oi = data[(data.total_amount < 2.5)].index
-    data.loc[indices_oi, 'total_amount'] = 11.76
+    data.loc[indices_oi, 'total_amount'] = 11.15
 
     # encode categorical to numeric (I avoid to use dummy to keep dataset small)
     if data.store_and_fwd_flag.dtype.name != 'int64':
@@ -91,8 +91,10 @@ def __clean_data__(adata):
 
     # rename time stamp variables and convert them to the right format
     data.rename(columns={'lpep_pickup_datetime': 'Pickup_dt', 'lpep_dropoff_datetime': 'Dropoff_dt'}, inplace=True)
-    data['Pickup_dt'] = data.Pickup_dt.apply(lambda x: dt.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"))
-    data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x: dt.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"))
+    data['Pickup_dt'] = data.Pickup_dt.apply(lambda x:dt.datetime.strptime(x,"%m/%d/%Y %I:%M:%S %p"))
+    data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x:dt.datetime.strptime(x,"%m/%d/%Y %I:%M:%S %p"))
+    # data['Pickup_dt'] = data.Pickup_dt.apply(lambda x: dt.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"))
+    # data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x: dt.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"))
     return data
 
 
@@ -104,14 +106,14 @@ def __engineer_features__(adata):
     . Week_day: int [0-6], day of the week a transaction was done
     . Month_day: int [0-30], day of the month a transaction was done
     . Hour: int [0-23], hour the day a transaction was done
-    . Shift type: int {1=(7am to 3pm), 2=(3pm to 11pm) and 3=(11pm to 7am)}, shift of the day  
+    . Shift type: int {1=(7am to 3pm), 2=(3pm to 11pm) and 3=(11pm to 7am)}, shift of the day
     . Speed_mph: float, speed of the trip
     . Tip_percentage: float, target variable
     . With_tip: int {0,1}, 1 = transaction with tip, 0 transction without tip
 
     input:
         adata: pandas.dataframe
-    output: 
+    output:
         pandas.dataframe
     """
 
@@ -119,7 +121,7 @@ def __engineer_features__(adata):
     data = adata.copy()
 
     # derive time variables
-    ref_week = dt.datetime(2015, 9, 1).isocalendar()[1]  # first week of september in 2015
+    ref_week = dt.datetime(2017, 1, 1).isocalendar()[1]  # first week of september in 2015
     data['Week'] = data.Pickup_dt.apply(lambda x: x.isocalendar()[1]) - ref_week + 1
     data['Week_day'] = data.Pickup_dt.apply(lambda x: x.isocalendar()[2])
     data['Month_day'] = data.Pickup_dt.apply(lambda x: x.day)
@@ -127,64 +129,31 @@ def __engineer_features__(adata):
     # data.rename(columns={'Pickup_hour':'Hour'},inplace=True)
 
     # create shift variable:  1=(7am to 3pm), 2=(3pm to 11pm) and 3=(11pm to 7am)
-    data['Shift_type'] = np.NAN
-    data.loc[data[(data.Hour >= 7) & (data.Hour < 15)].index, 'Shift_type'] = 1
-    data.loc[data[(data.Hour >= 15) & (data.Hour < 23)].index, 'Shift_type'] = 2
-    data.loc[data[data.Shift_type.isnull()].index, 'Shift_type'] = 3
+    data['shift_type'] = np.NAN
+    data.loc[data[(data.Hour >= 7) & (data.Hour < 15)].index, 'shift_type'] = 1
+    data.loc[data[(data.Hour >= 15) & (data.Hour < 23)].index, 'shift_type'] = 2
+    data.loc[data[data.shift_type.isnull()].index, 'shift_type'] = 3
 
-    # Trip duration 
-    data['Trip_duration'] = ((data.Dropoff_dt - data.Pickup_dt).apply(lambda x: x.total_seconds() / 60.))
+    # Trip duration
+    data['trip_duration'] = ((data.Dropoff_dt - data.Pickup_dt).apply(lambda x: x.total_seconds() / 60.))
 
-    # create direction variable Direction_NS. 
-    # This is 2 if taxi moving from north to south, 1 in the opposite direction and 0 otherwise
-    data['Direction_NS'] = (data.Pickup_latitude > data.Dropoff_latitude) * 1 + 1
-    indices = data[(data.Pickup_latitude == data.Dropoff_latitude) & (data.Pickup_latitude != 0)].index
-    data.loc[indices, 'Direction_NS'] = 0
-
-    # create direction variable Direction_EW. 
-    # This is 2 if taxi moving from east to west, 1 in the opposite direction and 0 otherwise
-    data['Direction_EW'] = (data.Pickup_longitude > data.Dropoff_longitude) * 1 + 1
-    indices = data[(data.Pickup_longitude == data.Dropoff_longitude) & (data.Pickup_longitude != 0)].index
-    data.loc[indices, 'Direction_EW'] = 0
 
     # create variable for Speed
-    data['Speed_mph'] = data.Trip_distance / (data.Trip_duration / 60)
-    # replace all NaNs values and values >240mph by a values sampled from a random distribution of 
+    data['speed_mph'] = data.trip_distance / (data.trip_duration / 60)
+    # replace all NaNs values and values >240mph by a values sampled from a random distribution of
     # mean 12.9 and  standard deviation 6.8mph. These values were extracted from the distribution
-    indices_oi = data[(data.Speed_mph.isnull()) | (data.Speed_mph > 240)].index
-    data.loc[indices_oi, 'Speed_mph'] = np.abs(np.random.normal(loc=12.9, scale=6.8, size=len(indices_oi)))
+    indices_oi = data[(data.speed_mph.isnull()) | (data.speed_mph > 200)].index
+    data.loc[indices_oi, 'speed_mph'] = np.abs(np.random.normal(loc=12.9, scale=6.8, size=len(indices_oi)))
 
-    # Create a new variable to check if a trip originated in Upper Manhattan
-    data['U_manhattan'] = data[['Pickup_latitude', 'Pickup_longitude']].apply(lambda r: is_within_bbox((r[0], r[1])),
-                                                                              axis=1)
 
     # create tip percentage variable
-    data['Tip_percentage'] = 100 * data.Tip_amount / data.Total_amount
+    data['tip_percentage'] = 100 * data.tip_amount / data.total_amount
 
     # create with_tip variable
-    data['With_tip'] = (data.Tip_percentage > 0) * 1
+    data['with_tip'] = (data.tip_percentage > 0) * 1
 
     return data
 
-
-# collected bounding box points
-umanhattan = [(40.796937, -73.949503), (40.787945, -73.955822), (40.782772, -73.943575),
-              (40.794715, -73.929801), (40.811261, -73.934153), (40.835371, -73.934515),
-              (40.868910, -73.911145), (40.872719, -73.910765), (40.878252, -73.926350),
-              (40.850557, -73.947262), (40.836225, -73.949899), (40.806050, -73.971255)]
-
-poi = Polygon(umanhattan)
-
-
-# create a function to check if a location is located inside Upper Manhattan
-def is_within_bbox(loc, poi=poi):
-    """
-    This function checks if a location loc with lat and lon is located within the polygon of interest
-    input:
-    loc: tuple, (latitude, longitude)
-    poi: shapely.geometry.Polygon, polygon of interest
-    """
-    return 1 * (Point(loc).within(poi))
 
 
 def __predict_tip__(transaction):
@@ -194,16 +163,16 @@ def __predict_tip__(transaction):
     instead of calling this function immediately, consider calling it from "make_predictions"
     """
     # load models
-    with open('my_classifier.pkl', 'rb') as fid:
+    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_classifier.pkl', 'rb') as fid:
         classifier = pickle.load(fid)
         fid.close()
-    with open('my_regressor.pkl', 'rb') as fid:
+    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_regressor.pkl', 'rb') as fid:
         regressor = pickle.load(fid)
         fid.close()
 
-    cls_predictors = ['Payment_type', 'Total_amount', 'Trip_duration', 'Speed_mph', 'MTA_tax',
-                      'Extra', 'Hour', 'Direction_NS', 'Direction_EW', 'U_manhattan']
-    reg_predictors = ['Total_amount', 'Trip_duration', 'Speed_mph']
+    cls_predictors = ['payment_type', 'total_amount', 'trip_duration', 'speed_mph', 'mta_tax',
+                      'extra']
+    reg_predictors = ['total_amount', 'trip_duration', 'speed_mph']
 
     # classify transactions
     clas = classifier.predict(transaction[cls_predictors])
@@ -216,17 +185,17 @@ def evaluate_predictions():
     """
     This looks for cleaned and predicted data set on disk and compare them
     """
-    cleaned = pd.read_csv('cleaned_data.csv')
-    predictions = pd.read_csv('submission.csv')
-    print ("mean squared error:", metrics.mean_squared_error(cleaned.Tip_percentage, predictions.predictions))
-    print ("r2 score:", metrics.r2_score(cleaned.Tip_percentage, predictions.predictions))
+    cleaned = pd.read_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv')
+    predictions = pd.read_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\submission.csv')
+    print ("mean squared error:", metrics.mean_squared_error(cleaned.tip_percentage, predictions.predictions))
+    print ("r2 score:", metrics.r2_score(cleaned.tip_percentage, predictions.predictions))
 
 
 def make_predictions(data):
     """
     This makes sure that data has the right format and then send it to the prediction model to be predicted
     data: pandas.dataframe, raw data from the website
-    the outputs are saved on disk: submissions and cleaned data saved as submission.csv and cleaned_data.csv respectively 
+    the outputs are saved on disk: submissions and cleaned data saved as submission.csv and cleaned_data.csv respectively
     """
     print ("cleaning ...")
     data = __clean_data__(data)
@@ -235,11 +204,13 @@ def make_predictions(data):
     print ("predicting ...")
     preds = pd.DataFrame(__predict_tip__(data), columns=['predictions'])
     preds.index = data.index
-    pd.DataFrame(data.Tip_percentage, columns=['Tip_percentage']).to_csv('cleaned_data.csv', index=True)
-    preds.to_csv('submission.csv', index=True)
+    pd.DataFrame(data.tip_percentage, columns=['tip_percentage']).to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv', index=True)
+    preds.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\submission.csv', index=True)
     print ("submissions and cleaned data saved as submission.csv and cleaned_data.csv respectively")
     print ("run evaluate_predictions() to compare them")
 
-if __name__ == '__main__':
-    data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
-    make_predictions(data)
+# data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
+data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
+
+
+make_predictions(data)
