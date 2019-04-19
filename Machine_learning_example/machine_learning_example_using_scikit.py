@@ -22,8 +22,8 @@ warnings.filterwarnings('ignore')
 
 
 # Download the September 2015 dataset
-data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
-# data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
+# data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
+data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
 
 
 # Print the size of the dataset
@@ -62,8 +62,9 @@ plt.savefig('Question2.jpeg',format='jpeg')
 plt.show()
 #
 # First, convert pickup and drop off datetime variable in their specific righ format
-data['Pickup_dt'] = data.lpep_pickup_datetime.apply(lambda x:datetime.datetime.strptime(x,"%Y-%m-%d %H:%M:%S"))
-data['Dropoff_dt'] = data.lpep_dropoff_datetime.apply(lambda x:datetime.datetime.strptime(x,"%Y-%m-%d %H:%M:%S"))
+data.rename(columns={'lpep_pickup_datetime': 'Pickup_dt', 'lpep_dropoff_datetime': 'Dropoff_dt'}, inplace=True)
+data['Pickup_dt'] = data.Pickup_dt.apply(lambda x: datetime.datetime.strptime(x, "%m/%d/%Y %I:%M:%S %p"))
+data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x: datetime.datetime.strptime(x, "%m/%d/%Y %I:%M:%S %p"))
 
 # Second, create a variable for pickup hours
 data['Pickup_hour'] = data.Pickup_dt.apply(lambda x:x.hour)
@@ -127,7 +128,7 @@ ax[1].set_ylabel('Group normalized trips count')
 ax[1].set_title('B. Hourly distribution of trips')
 ax[1].legend(['Airport trips','Non-airport trips'],loc='best',title='group')
 plt.savefig('Question3_2.jpeg',format='jpeg')
-plt.show()
+# plt.show()
 #
 #
 # data = data[(data.total_amount>=2.5)] #cleaning
@@ -195,11 +196,6 @@ def clean_data(adata):
     if data.store_and_fwd_flag.dtype.name != 'int64':
         data['store_and_fwd_flag'] = (data.store_and_fwd_flag == 'Y') * 1
 
-    # rename time stamp variables and convert them to the right format
-    print ("renaming variables...")
-    data.rename(columns={'lpep_pickup_datetime': 'Pickup_dt', 'lpep_dropoff_datetime': 'Dropoff_dt'}, inplace=True)
-    data['Pickup_dt'] = data.Pickup_dt.apply(lambda x:datetime.datetime.strptime(x,"%m/%d/%Y %I:%M:%S %p"))
-    data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x:datetime.datetime.strptime(x,"%m/%d/%Y %I:%M:%S %p"))
     print ("Done cleaning")
     return data
 
@@ -286,7 +282,7 @@ ax[1].set_xlabel('Tip (%)')
 ax[1].set_title('Distribution of Tip (%) - Transaction with tips')
 ax[1].set_ylabel('Group normed count')
 plt.savefig('Question4_target_varc.jpeg',format='jpeg')
-plt.show()
+# plt.show()
 
 
 # Functions for exploratory data analysis
@@ -433,7 +429,7 @@ plt.xticks(range(len(continuous_variables)),continuous_variables,rotation='verti
 plt.yticks(range(len(continuous_variables)),continuous_variables)
 plt.colorbar()
 plt.title('Correlation between continuous variables')
-plt.show()
+# plt.show()
 
 # visualization of the Payment_type
 # visualize_categories(data1,'payment_type','histogram',[20])
@@ -480,7 +476,7 @@ def modelfit(alg, dtrain, predictors, target, scoring_method, performCV=True, pr
             feat_imp = pd.Series(alg.feature_importances_, predictors).sort_values(ascending=False)
         feat_imp.plot(kind='bar', title='Feature Importances')
         plt.ylabel('Feature Importe Score')
-        plt.show()
+        # plt.show()
 
 
 # optimize n_estimator through grid search

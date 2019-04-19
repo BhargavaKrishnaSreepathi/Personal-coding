@@ -197,20 +197,25 @@ def make_predictions(data):
     data: pandas.dataframe, raw data from the website
     the outputs are saved on disk: submissions and cleaned data saved as submission.csv and cleaned_data.csv respectively
     """
-    print ("cleaning ...")
-    data = __clean_data__(data)
+
     print ("creating features ...")
     data = __engineer_features__(data)
     print ("predicting ...")
     preds = pd.DataFrame(__predict_tip__(data), columns=['predictions'])
+    tips = preds * data.total_amount
+    tips.index = data.index
     preds.index = data.index
-    pd.DataFrame(data.tip_percentage, columns=['tip_percentage']).to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv', index=True)
-    preds.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\submission.csv', index=True)
+    pd.DataFrame(data.tip_percentage * data.total_amount, columns=['tip_amount']).to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv', index=True)
+    preds.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\predictions.csv', index=True)
+    tips.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\tip_amount.csv', index=True)
     print ("submissions and cleaned data saved as submission.csv and cleaned_data.csv respectively")
     print ("run evaluate_predictions() to compare them")
 
 # data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
 data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
+print("cleaning ...")
+data = __clean_data__(data)
+test = data[(data.Pickup_dt > '2017-01-31 23:59:59') & (data.Pickup_dt <= '2017-02-28 23:59:59')]
 
 
-make_predictions(data)
+make_predictions(test)
