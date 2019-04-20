@@ -11,22 +11,13 @@
 # 3. Making predictions
 
 # The output:
-#    pandas.Series, two files are saved on disk,  submission.csv and cleaned_data.csv respectively.
+#    pandas.Series, three files are saved on disk,  prediction.csv, tip_amount.csv and cleaned_data.csv respectively.
 
 import pandas as pd
 import numpy as np
 import datetime as dt
-import matplotlib.pyplot as plt
-import os, json, requests, pickle
-from scipy.stats import skew
-from shapely.geometry import Point, Polygon, MultiPoint, MultiPolygon
-from scipy.stats import ttest_ind, f_oneway, lognorm, levy, skew, chisquare
-from sklearn.preprocessing import normalize, scale
+import pickle
 from sklearn import metrics
-from tabulate import \
-    tabulate  # pretty print of tables. source: http://txt.arboreus.com/2013/03/13/pretty-print-tables-in-python.html
-from shapely.geometry import Point, Polygon, MultiPoint
-
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -93,8 +84,7 @@ def __clean_data__(adata):
     data.rename(columns={'lpep_pickup_datetime': 'Pickup_dt', 'lpep_dropoff_datetime': 'Dropoff_dt'}, inplace=True)
     data['Pickup_dt'] = data.Pickup_dt.apply(lambda x:dt.datetime.strptime(x,"%m/%d/%Y %I:%M:%S %p"))
     data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x:dt.datetime.strptime(x,"%m/%d/%Y %I:%M:%S %p"))
-    # data['Pickup_dt'] = data.Pickup_dt.apply(lambda x: dt.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"))
-    # data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x: dt.datetime.strptime(x, "%Y-%m-%d %H:%M:%S"))
+
     return data
 
 
@@ -137,14 +127,12 @@ def __engineer_features__(adata):
     # Trip duration
     data['trip_duration'] = ((data.Dropoff_dt - data.Pickup_dt).apply(lambda x: x.total_seconds() / 60.))
 
-
     # create variable for Speed
     data['speed_mph'] = data.trip_distance / (data.trip_duration / 60)
     # replace all NaNs values and values >240mph by a values sampled from a random distribution of
     # mean 12.9 and  standard deviation 6.8mph. These values were extracted from the distribution
     indices_oi = data[(data.speed_mph.isnull()) | (data.speed_mph > 200)].index
     data.loc[indices_oi, 'speed_mph'] = np.abs(np.random.normal(loc=12.9, scale=6.8, size=len(indices_oi)))
-
 
     # create tip percentage variable
     data['tip_percentage'] = 100 * data.tip_amount / data.total_amount
@@ -202,20 +190,21 @@ def make_predictions(data):
     data = __engineer_features__(data)
     print ("predicting ...")
     preds = pd.DataFrame(__predict_tip__(data), columns=['predictions'])
-    tips = preds * data.total_amount
-    tips.index = data.index
+
     preds.index = data.index
     pd.DataFrame(data.tip_percentage * data.total_amount, columns=['tip_amount']).to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv', index=True)
     preds.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\predictions.csv', index=True)
+    tips = preds['predictions'] * data.total_amount / 100.0
+    tips.index = data.index
+
     tips.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\tip_amount.csv', index=True)
-    print ("submissions and cleaned data saved as submission.csv and cleaned_data.csv respectively")
+    print ("submissions and cleaned data savdataed as submission.csv and cleaned_data.csv respectively")
     print ("run evaluate_predictions() to compare them")
 
-# data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
-data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
-print("cleaning ...")
-data = __clean_data__(data)
-test = data[(data.Pickup_dt > '2017-01-31 23:59:59') & (data.Pickup_dt <= '2017-02-28 23:59:59')]
+if __name__ == '__main__':
 
-
-make_predictions(test)
+    data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv') # address of the data downloaded in the system
+    print("cleaning ...")
+    data = __clean_data__(data)
+    test = data[(data.Pickup_dt > '2017-01-31 23:59:59') & (data.Pickup_dt <= '2017-02-28 23:59:59')]
+    make_predictions(test)

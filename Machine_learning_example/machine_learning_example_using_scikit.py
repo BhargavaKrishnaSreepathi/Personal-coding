@@ -2,141 +2,17 @@ import pandas as pd
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
-import os, json, requests, pickle
-from scipy.stats import skew
-from shapely.geometry import Point,Polygon,MultiPoint,MultiPolygon
-from scipy.stats import ttest_ind, f_oneway, lognorm, levy, skew, chisquare
-import sklearn
-#import scipy.stats as st
-from sklearn.preprocessing import normalize, scale
+import pickle
+from scipy.stats import ttest_ind, lognorm, chisquare
 from tabulate import tabulate #pretty print of tables. source: http://txt.arboreus.com/2013/03/13/pretty-print-tables-in-python.html
-from shapely.geometry import Point,Polygon,MultiPoint
-# import scikit learn libraries
 from sklearn import metrics  # model optimization and valuation tools
 from sklearn.model_selection import GridSearchCV, cross_validate, cross_val_score  # Perforing grid search
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestRegressor
-
 import warnings
 warnings.filterwarnings('ignore')
 
-
-# Download the September 2015 dataset
-# data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
-data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
-
-
-# Print the size of the dataset
-print ("Number of rows:", data.shape[0])
-print ("Number of columns: ", data.shape[1])
-#
-# # define the figure with 2 subplots
-fig,ax = plt.subplots(1,2,figsize = (15,4))
-
-# histogram of the number of trip distance
-data.trip_distance.hist(bins=30,ax=ax[0])
-ax[0].set_xlabel('Trip Distance (miles)')
-ax[0].set_ylabel('Count')
-ax[0].set_yscale('log')
-ax[0].set_title('Histogram of Trip Distance with outliers included')
-
-# create a vector to contain Trip Distance
-v = data.trip_distance
-# exclude any data point located further than 3 standard deviations of the median point and
-# plot the histogram with 30 bins
-v[~((v-v.median()).abs()>3*v.std())].hist(bins=30,ax=ax[1]) #
-ax[1].set_xlabel('Trip Distance (miles)')
-ax[1].set_ylabel('Count')
-ax[1].set_title('A. Histogram of Trip Distance (without outliers)')
-
-# apply a lognormal fit. Use the mean of trip distance as the scale parameter
-scatter,loc,mean = lognorm.fit(data.trip_distance.values,
-                               scale=data.trip_distance.mean(),
-                               loc=0)
-pdf_fitted = lognorm.pdf(np.arange(0,12,.1),scatter,loc,mean)
-ax[1].plot(np.arange(0,12,.1),6000000*pdf_fitted,'r')
-ax[1].legend(['data','lognormal fit'])
-
-# export the figure
-plt.savefig('Question2.jpeg',format='jpeg')
-plt.show()
-#
-# First, convert pickup and drop off datetime variable in their specific righ format
-data.rename(columns={'lpep_pickup_datetime': 'Pickup_dt', 'lpep_dropoff_datetime': 'Dropoff_dt'}, inplace=True)
-data['Pickup_dt'] = data.Pickup_dt.apply(lambda x: datetime.datetime.strptime(x, "%m/%d/%Y %I:%M:%S %p"))
-data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x: datetime.datetime.strptime(x, "%m/%d/%Y %I:%M:%S %p"))
-
-# Second, create a variable for pickup hours
-data['Pickup_hour'] = data.Pickup_dt.apply(lambda x:x.hour)
-
-# Mean and Median of trip distance by pickup hour
-# I will generate the table but also generate a plot for a better visualization
-
-fig,ax = plt.subplots(1,1,figsize=(9,5)) # prepare fig to plot mean and median values
-# use a pivot table to aggregate Trip_distance by hour
-table1 = data.pivot_table(index='Pickup_hour', values='trip_distance',aggfunc=('mean','median')).reset_index()
-# rename columns
-table1.columns = ['Hour','Mean_distance','Median_distance']
-table1[['Mean_distance','Median_distance']].plot(ax=ax)
-plt.ylabel('Metric (miles)')
-plt.xlabel('Hours after midnight')
-plt.title('Distribution of trip distance by pickup hour')
-#plt.xticks(np.arange(0,30,6)+0.35,range(0,30,6))
-plt.xlim([0,23])
-plt.savefig('Question3_1.jpeg',format='jpeg')
-# plt.show()
-print ('-----Trip distance by hour of the day-----\n')
-print (tabulate(table1.values.tolist(),["Hour","Mean distance","Median distance"]))
-#
-# # select airport trips
-airports_trips = data[(data.RatecodeID==2) | (data.RatecodeID==3)]
-print ("Number of trips to/from NYC airports: ", airports_trips.shape[0])
-print ("Average fare (calculated by the meter) of trips to/from NYC airports: $", airports_trips.fare_amount.mean(),"per trip")
-print ("Average total charged amount (before tip) of trips to/from NYC airports: $", airports_trips.total_amount.mean(),"per trip")
-#
-# create a vector to contain Trip Distance for
-v2 = airports_trips.trip_distance # airport trips
-v3 = data.loc[~data.index.isin(v2.index),'trip_distance'] # non-airport trips
-
-# remove outliers:
-# exclude any data point located further than 3 standard deviations of the median point and
-# plot the histogram with 30 bins
-v2 = v2[~((v2-v2.median()).abs()>3*v2.std())]
-v3 = v3[~((v3-v3.median()).abs()>3*v3.std())]
-
-# define bins boundaries
-bins = np.histogram(v2,normed=True)[1]
-h2 = np.histogram(v2,bins=bins,normed=True)
-h3 = np.histogram(v3,bins=bins,normed=True)
-
-# plot distributions of trip distance normalized among groups
-fig,ax = plt.subplots(1,2,figsize = (15,4))
-w = .4*(bins[1]-bins[0])
-ax[0].bar(bins[:-1],h2[0],alpha=1,width=w,color='b')
-ax[0].bar(bins[:-1]+w,h3[0],alpha=1,width=w,color='g')
-ax[0].legend(['Airport trips','Non-airport trips'],loc='best',title='group')
-ax[0].set_xlabel('trip distance (miles)')
-ax[0].set_ylabel('Group normalized trips count')
-ax[0].set_title('A. trip distance distribution')
-#ax[0].set_yscale('log')
-
-# plot hourly distribution
-airports_trips.Pickup_hour.value_counts(normalize=True).sort_index().plot(ax=ax[1])
-data.loc[~data.index.isin(v2.index),'Pickup_hour'].value_counts(normalize=True).sort_index().plot(ax=ax[1])
-ax[1].set_xlabel('Hours after midnight')
-ax[1].set_ylabel('Group normalized trips count')
-ax[1].set_title('B. Hourly distribution of trips')
-ax[1].legend(['Airport trips','Non-airport trips'],loc='best',title='group')
-plt.savefig('Question3_2.jpeg',format='jpeg')
-# plt.show()
-#
-#
-# data = data[(data.total_amount>=2.5)] #cleaning
-# data['tip_percentage'] = 100*data.tip_amount/data.total_amount
-# print ("Summary: tip percentage\n",data.tip_percentage.describe())
-
 # define a function to clean a loaded dataset
-
 def clean_data(adata):
     """
     This function cleans the input dataframe adata:
@@ -199,9 +75,6 @@ def clean_data(adata):
     print ("Done cleaning")
     return data
 
-data = clean_data(data)
-
-
 def engineer_features(adata):
     """
     This function create new variables based on present variables in the dataset adata. It creates:
@@ -260,31 +133,6 @@ def engineer_features(adata):
 
     return data
 
-
-# run the code to create new features on the dataset
-print ("size before feature engineering:", data.shape)
-data = engineer_features(data)
-print ("size after feature engineering:", data.shape)
-
-## code to compare the two Tip_percentage identified groups
-# split data in the two groups
-data1 = data[data.tip_percentage>0]
-data2 = data[data.tip_percentage==0]
-
-# generate histograms to compare
-fig,ax=plt.subplots(1,2,figsize=(14,4))
-data.tip_percentage.hist(bins = 20,normed=True,ax=ax[0])
-ax[0].set_xlabel('Tip (%)')
-ax[0].set_title('Distribution of Tip (%) - All transactions')
-
-data1.tip_percentage.hist(bins = 20,normed=True,ax=ax[1])
-ax[1].set_xlabel('Tip (%)')
-ax[1].set_title('Distribution of Tip (%) - Transaction with tips')
-ax[1].set_ylabel('Group normed count')
-plt.savefig('Question4_target_varc.jpeg',format='jpeg')
-# plt.show()
-
-
 # Functions for exploratory data analysis
 def visualize_continuous_variables(df, label, method={'type': 'histogram', 'bins': 20}, outlier='on'):
     """
@@ -318,7 +166,6 @@ def visualize_continuous_variables(df, label, method={'type': 'histogram', 'bins
     ax[0].set_ylabel('Count')
     ax[1].set_ylabel('Tip (%)')
 
-
 def visualize_categories(df, catName, chart_type='histogram', ylimit=[None, None]):
     """
     This functions helps to quickly visualize categorical variables.
@@ -350,7 +197,6 @@ def visualize_categories(df, catName, chart_type='histogram', ylimit=[None, None
         cmd = cmd[:-1] + ")"
         print ("one way anova test:", eval(cmd))  # evaluate the command and print
     print ("Frequency of categories (%):\n", df[catName].value_counts(normalize=True) * 100)
-
 
 def test_classification(df, label, yl=[0, 50]):
     """
@@ -416,25 +262,6 @@ def generate_histogram(df, catName):
     plt.title('Distribution of Tip by ' + catName)
     plt.xlabel('Tip (%)')
 
-# Example of exploration of the Fare_amount using the implented code:
-visualize_continuous_variables(data1, 'fare_amount', outlier='on')
-# test_classification(data,'fare_amount',[0,25])
-
-
-continuous_variables=['total_amount','fare_amount','trip_distance','trip_duration','tolls_amount','speed_mph','tip_percentage']
-cor_mat = data1[continuous_variables].corr()
-fig,ax = plt.subplots(1,1,figsize = [6,6])
-plt.imshow(cor_mat)
-plt.xticks(range(len(continuous_variables)),continuous_variables,rotation='vertical')
-plt.yticks(range(len(continuous_variables)),continuous_variables)
-plt.colorbar()
-plt.title('Correlation between continuous variables')
-# plt.show()
-
-# visualization of the Payment_type
-# visualize_categories(data1,'payment_type','histogram',[20])
-
-
 # define a function that help to train models and perform cv
 def modelfit(alg, dtrain, predictors, target, scoring_method, performCV=True, printFeatureImportance=True, cv_folds=5):
     """
@@ -494,85 +321,6 @@ def optimize_num_trees(alg, param_test, scoring_method, train, predictors, targe
     gsearch.fit(train[predictors], train[target])
     return gsearch
 
-print ("Optimizing the classifier...")
-
-train = data[(data.Pickup_dt <= '2017-01-31 23:59:59')]  # make a copy of the training set
-
-# since the dataset is too big for my system, select a small sample size to carry on training and 5 folds cross validation
-train = train.loc[np.random.choice(train.index, size=100000, replace=False)]
-target = 'with_tip'  # set target variable - it will be used later in optimization
-
-tic = datetime.datetime.now()  # initiate the timing
-# for predictors start with candidates identified during the EDA
-predictors = ['payment_type', 'total_amount', 'trip_duration', 'speed_mph', 'mta_tax',
-              'extra']
-
-# optimize n_estimator through grid search
-param_test = {'n_estimators': range(30, 151, 20)}  # define range over which number of trees is to be optimized
-
-# initiate classification model
-model_cls = GradientBoostingClassifier(
-    learning_rate=0.1,  # use default
-    min_samples_split=2,  # use default
-    max_depth=5,
-    max_features='auto',
-    subsample=0.8,  # try <1 to decrease variance and increase bias
-    random_state=10)
-
-# get results of the search grid
-gs_cls = optimize_num_trees(model_cls, param_test, 'roc_auc', train, predictors, target)
-print (gs_cls.best_params_, gs_cls.best_score_)
-
-# cross validate the best model with optimized number of estimators
-modelfit(gs_cls.best_estimator_, train, predictors, target, 'roc_auc')
-
-# save the best estimator on disk as pickle for a later use
-with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_classifier.pkl', 'wb') as fid:
-    pickle.dump(gs_cls.best_estimator_, fid)
-    fid.close()
-
-print ("Processing time:", datetime.datetime.now() - tic)
-
-
-train = data1[(data1.Pickup_dt <= '2017-01-31 23:59:59')]
-train = train.loc[np.random.choice(train.index,size=100000,replace=False)]
-
-train['ID'] = train.index
-IDCol = 'ID'
-target = 'tip_percentage'
-
-predictors = ['VendorID', 'passenger_count', 'trip_distance', 'total_amount',
-              'extra', 'mta_tax', 'tolls_amount', 'payment_type',
-              'Hour', 'Week', 'Week_day', 'Month_day', 'Shift_type',
-              'trip_duration', 'speed_mph']
-predictors = ['trip_distance','tolls_amount', 'trip_duration', 'speed_mph']
-predictors = ['total_amount', 'trip_duration', 'speed_mph']
-
-
-# Random Forest
-tic = datetime.datetime.now()
-# optimize n_estimator through grid search
-param_test = {'n_estimators':range(50,200,25)} # define range over which number of trees is to be optimized
-# initiate classification model
-#rfr = RandomForestRegressor(min_samples_split=2,max_depth=5,max_features='auto',random_state = 10)
-rfr = RandomForestRegressor()#n_estimators=100)
-# get results of the search grid
-gs_rfr = optimize_num_trees(rfr,param_test,'neg_mean_squared_error',train,predictors,target)
-
-# print optimization results
-print (gs_rfr.best_params_, gs_rfr.best_score_)
-
-# cross validate the best model with optimized number of estimators
-modelfit(gs_rfr.best_estimator_,train,predictors,target,'neg_mean_squared_error')
-
-# save the best estimator on disk as pickle for a later use
-with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_regressor.pkl','wb') as fid:
-    pickle.dump(gs_rfr.best_estimator_,fid)
-    fid.close()
-
-
-print (datetime.datetime.now()-tic)
-
 
 def predict_tip(transaction):
     """
@@ -590,20 +338,258 @@ def predict_tip(transaction):
     # predict tips for those transactions classified as 1
     return clas * gs_rfr.best_estimator_.predict(transaction[reg_predictors])
 
-test = data[(data.Pickup_dt > '2017-01-31 23:59:59') & (data.Pickup_dt <= '2017-02-28 23:59:59')]
-ypred = predict_tip(test)
-print ("final mean_squared_error:", metrics.mean_squared_error(ypred,test.tip_percentage))
-print ("final r2_score:", metrics.r2_score(ypred,test.tip_percentage))
+def machine_learning_using_scikit(data):
+
+    train = data[(data.Pickup_dt <= '2017-01-31 23:59:59')]  # make a copy of the training set
+
+    # since the dataset is too big for my system, select a small sample size to carry on training and 5 folds cross validation
+    train = train.loc[np.random.choice(train.index, size=100000, replace=False)]
+    target = 'with_tip'  # set target variable - it will be used later in optimization
+
+    tic = datetime.datetime.now()  # initiate the timing
+    # for predictors start with candidates identified during the EDA
+    predictors = ['payment_type', 'total_amount', 'trip_duration', 'speed_mph', 'mta_tax',
+                  'extra']
+
+    # optimize n_estimator through grid search
+    param_test = {'n_estimators': range(30, 151, 20)}  # define range over which number of trees is to be optimized
+
+    # initiate classification model
+    model_cls = GradientBoostingClassifier(
+        learning_rate=0.1,  # use default
+        min_samples_split=2,  # use default
+        max_depth=5,
+        max_features='auto',
+        subsample=0.8,  # try <1 to decrease variance and increase bias
+        random_state=10)
+
+    # get results of the search grid
+    gs_cls = optimize_num_trees(model_cls, param_test, 'roc_auc', train, predictors, target)
+    print(gs_cls.best_params_, gs_cls.best_score_)
+
+    # cross validate the best model with optimized number of estimators
+    modelfit(gs_cls.best_estimator_, train, predictors, target, 'roc_auc')
+
+    # save the best estimator on disk as pickle for a later use
+    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_classifier.pkl', 'wb') as fid:
+        pickle.dump(gs_cls.best_estimator_, fid)
+        fid.close()
+
+    print("Processing time:", datetime.datetime.now() - tic)
+
+    train = data1[(data1.Pickup_dt <= '2017-01-31 23:59:59')]
+    train = train.loc[np.random.choice(train.index, size=100000, replace=False)]
+
+    train['ID'] = train.index
+    target = 'tip_percentage'
+    predictors = ['total_amount', 'trip_duration', 'speed_mph']
+
+    # Random Forest
+    tic = datetime.datetime.now()
+    # optimize n_estimator through grid search
+    param_test = {'n_estimators': range(50, 200, 25)}  # define range over which number of trees is to be optimized
+
+    # initiate classification model
+    # rfr = RandomForestRegressor(min_samples_split=2,max_depth=5,max_features='auto',random_state = 10)
+    rfr = RandomForestRegressor()  # n_estimators=100)
+    # get results of the search grid
+    gs_rfr = optimize_num_trees(rfr, param_test, 'neg_mean_squared_error', train, predictors, target)
+
+    # print optimization results
+    print(gs_rfr.best_params_, gs_rfr.best_score_)
+
+    # cross validate the best model with optimized number of estimators
+    modelfit(gs_rfr.best_estimator_, train, predictors, target, 'neg_mean_squared_error')
+
+    # save the best estimator on disk as pickle for a later use
+    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_regressor.pkl', 'wb') as fid:
+        pickle.dump(gs_rfr.best_estimator_, fid)
+        fid.close()
+
+    print(datetime.datetime.now() - tic)
+
+    return gs_cls, gs_rfr
+
+def exploring_data(data):
+
+    # Print the size of the dataset
+    print("Number of rows:", data.shape[0])
+    print("Number of columns: ", data.shape[1])
+    #
+    # # define the figure with 2 subplots
+    fig, ax = plt.subplots(1, 2, figsize=(15, 4))
+
+    # histogram of the number of trip distance
+    data.trip_distance.hist(bins=30, ax=ax[0])
+    ax[0].set_xlabel('Trip Distance (miles)')
+    ax[0].set_ylabel('Count')
+    ax[0].set_yscale('log')
+    ax[0].set_title('Histogram of Trip Distance with outliers included')
+
+    # create a vector to contain Trip Distance
+    v = data.trip_distance
+    # exclude any data point located further than 3 standard deviations of the median point and
+    # plot the histogram with 30 bins
+    v[~((v - v.median()).abs() > 3 * v.std())].hist(bins=30, ax=ax[1])  #
+    ax[1].set_xlabel('Trip Distance (miles)')
+    ax[1].set_ylabel('Count')
+    ax[1].set_title('A. Histogram of Trip Distance (without outliers)')
+
+    # apply a lognormal fit. Use the mean of trip distance as the scale parameter
+    scatter, loc, mean = lognorm.fit(data.trip_distance.values,
+                                     scale=data.trip_distance.mean(),
+                                     loc=0)
+    pdf_fitted = lognorm.pdf(np.arange(0, 12, .1), scatter, loc, mean)
+    ax[1].plot(np.arange(0, 12, .1), 6000000 * pdf_fitted, 'r')
+    ax[1].legend(['data', 'lognormal fit'])
+
+    # export the figure
+    plt.savefig('Question2.jpeg', format='jpeg')
+    plt.show()
+
+    #
+    # First, convert pickup and drop off datetime variable in their specific righ format
+    data.rename(columns={'lpep_pickup_datetime': 'Pickup_dt', 'lpep_dropoff_datetime': 'Dropoff_dt'}, inplace=True)
+    data['Pickup_dt'] = data.Pickup_dt.apply(lambda x: datetime.datetime.strptime(x, "%m/%d/%Y %I:%M:%S %p"))
+    data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x: datetime.datetime.strptime(x, "%m/%d/%Y %I:%M:%S %p"))
+
+    # Second, create a variable for pickup hours
+    data['Pickup_hour'] = data.Pickup_dt.apply(lambda x: x.hour)
+
+    # Mean and Median of trip distance by pickup hour
+    # I will generate the table but also generate a plot for a better visualization
+
+    fig, ax = plt.subplots(1, 1, figsize=(9, 5))  # prepare fig to plot mean and median values
+    # use a pivot table to aggregate Trip_distance by hour
+    table1 = data.pivot_table(index='Pickup_hour', values='trip_distance', aggfunc=('mean', 'median')).reset_index()
+    # rename columns
+    table1.columns = ['Hour', 'Mean_distance', 'Median_distance']
+    table1[['Mean_distance', 'Median_distance']].plot(ax=ax)
+    plt.ylabel('Metric (miles)')
+    plt.xlabel('Hours after midnight')
+    plt.title('Distribution of trip distance by pickup hour')
+    # plt.xticks(np.arange(0,30,6)+0.35,range(0,30,6))
+    plt.xlim([0, 23])
+    plt.savefig('Question3_1.jpeg', format='jpeg')
+    # plt.show()
+    print('-----Trip distance by hour of the day-----\n')
+    print(tabulate(table1.values.tolist(), ["Hour", "Mean distance", "Median distance"]))
+    #
+    # # select airport trips
+    airports_trips = data[(data.RatecodeID == 2) | (data.RatecodeID == 3)]
+    print("Number of trips to/from NYC airports: ", airports_trips.shape[0])
+    print("Average fare (calculated by the meter) of trips to/from NYC airports: $", airports_trips.fare_amount.mean(),
+          "per trip")
+    print("Average total charged amount (before tip) of trips to/from NYC airports: $",
+          airports_trips.total_amount.mean(), "per trip")
+    #
+    # create a vector to contain Trip Distance for
+    v2 = airports_trips.trip_distance  # airport trips
+    v3 = data.loc[~data.index.isin(v2.index), 'trip_distance']  # non-airport trips
+
+    # remove outliers:
+    # exclude any data point located further than 3 standard deviations of the median point and
+    # plot the histogram with 30 bins
+    v2 = v2[~((v2 - v2.median()).abs() > 3 * v2.std())]
+    v3 = v3[~((v3 - v3.median()).abs() > 3 * v3.std())]
+
+    # define bins boundaries
+    bins = np.histogram(v2, normed=True)[1]
+    h2 = np.histogram(v2, bins=bins, normed=True)
+    h3 = np.histogram(v3, bins=bins, normed=True)
+
+    # plot distributions of trip distance normalized among groups
+    fig, ax = plt.subplots(1, 2, figsize=(15, 4))
+    w = .4 * (bins[1] - bins[0])
+    ax[0].bar(bins[:-1], h2[0], alpha=1, width=w, color='b')
+    ax[0].bar(bins[:-1] + w, h3[0], alpha=1, width=w, color='g')
+    ax[0].legend(['Airport trips', 'Non-airport trips'], loc='best', title='group')
+    ax[0].set_xlabel('trip distance (miles)')
+    ax[0].set_ylabel('Group normalized trips count')
+    ax[0].set_title('A. trip distance distribution')
+    # ax[0].set_yscale('log')
+
+    # plot hourly distribution
+    airports_trips.Pickup_hour.value_counts(normalize=True).sort_index().plot(ax=ax[1])
+    data.loc[~data.index.isin(v2.index), 'Pickup_hour'].value_counts(normalize=True).sort_index().plot(ax=ax[1])
+    ax[1].set_xlabel('Hours after midnight')
+    ax[1].set_ylabel('Group normalized trips count')
+    ax[1].set_title('B. Hourly distribution of trips')
+    ax[1].legend(['Airport trips', 'Non-airport trips'], loc='best', title='group')
+    plt.savefig('Question3_2.jpeg', format='jpeg')
+    # plt.show()
+
+    return data
 
 
-df = test.copy() # make a copy of data
-df['predictions'] = ypred # add predictions column
-df['residuals'] = df.tip_percentage - df.predictions # calculate residuals
+if __name__ == '__main__':
+    # Download the September 2015 dataset
+    # data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
+    data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
 
-df.residuals.hist(bins = 20) # plot histogram of residuals
-plt.yscale('log')
-plt.xlabel('predicted - real')
-plt.ylabel('count')
-plt.title('Residual plot')
-plt.show()
+    data = exploring_data(data)
+
+    data = clean_data(data)
+
+    # run the code to create new features on the dataset
+    print("size before feature engineering:", data.shape)
+    data = engineer_features(data)
+    print("size after feature engineering:", data.shape)
+
+    ## code to compare the two Tip_percentage identified groups
+    # split data in the two groups
+    data1 = data[data.tip_percentage > 0]
+    data2 = data[data.tip_percentage == 0]
+
+    # generate histograms to compare
+    fig, ax = plt.subplots(1, 2, figsize=(14, 4))
+    data.tip_percentage.hist(bins=20, normed=True, ax=ax[0])
+    ax[0].set_xlabel('Tip (%)')
+    ax[0].set_title('Distribution of Tip (%) - All transactions')
+
+    data1.tip_percentage.hist(bins=20, normed=True, ax=ax[1])
+    ax[1].set_xlabel('Tip (%)')
+    ax[1].set_title('Distribution of Tip (%) - Transaction with tips')
+    ax[1].set_ylabel('Group normed count')
+    plt.savefig('Question4_target_varc.jpeg', format='jpeg')
+    # plt.show()
+
+
+    # Example of exploration of the Fare_amount using the implented code:
+    visualize_continuous_variables(data1, 'fare_amount', outlier='on')
+    # test_classification(data,'fare_amount',[0,25])
+
+    continuous_variables = ['total_amount', 'fare_amount', 'trip_distance', 'trip_duration', 'tolls_amount',
+                            'speed_mph', 'tip_percentage']
+    cor_mat = data1[continuous_variables].corr()
+    fig, ax = plt.subplots(1, 1, figsize=[6, 6])
+    plt.imshow(cor_mat)
+    plt.xticks(range(len(continuous_variables)), continuous_variables, rotation='vertical')
+    plt.yticks(range(len(continuous_variables)), continuous_variables)
+    plt.colorbar()
+    plt.title('Correlation between continuous variables')
+    # plt.show()
+
+    # visualization of the Payment_type
+    # visualize_categories(data1,'payment_type','histogram',[20])
+
+    print("Optimizing the classifier...")
+
+    gs_cls, gs_rfr = machine_learning_using_scikit(data)
+
+    test = data[(data.Pickup_dt > '2017-01-31 23:59:59') & (data.Pickup_dt <= '2017-02-28 23:59:59')]
+    ypred = predict_tip(test)
+    print("final mean_squared_error:", metrics.mean_squared_error(ypred, test.tip_percentage))
+    print("final r2_score:", metrics.r2_score(ypred, test.tip_percentage))
+
+    df = test.copy()  # make a copy of data
+    df['predictions'] = ypred  # add predictions column
+    df['residuals'] = df.tip_percentage - df.predictions  # calculate residuals
+
+    df.residuals.hist(bins=20)  # plot histogram of residuals
+    plt.yscale('log')
+    plt.xlabel('predicted - real')
+    plt.ylabel('count')
+    plt.title('Residual plot')
+    plt.show()
 
