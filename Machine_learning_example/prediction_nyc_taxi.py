@@ -22,14 +22,10 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-
-def read_me():
-    """
-    This is a function to print a read me instruction
-    """
-    print(
-        "=========Introduction=========\n\nUse this code to predict the percentage tip expected after a trip in NYC green taxi. \nThe code is a predictive model that was built and trained on top of the Gradient Boosting Classifer and the Random Forest Gradient both provided in scikit-learn\n\nThe input: \npandas.dataframe with columns:This should be in the same format as downloaded from the website\n\nThe data frame go through the following pipeline:\n\t1. Cleaning\n\t2. Creation of derived variables\n\t3. Making predictions\n\nThe output:\n\tpandas.Series, two files are saved on disk,  submission.csv and cleaned_data.csv respectively.\n\nTo make predictions, run 'tip_predictor.make_predictions(data)', where data is any 2015 raw dataframe fresh from http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml\nRun tip_predictor.read_me() for further instructions\n")
-
+__author__ = "Sreepathi Bhargava Krishna"
+__credits__ = ["Sreepathi Bhargava Krishna"]
+__email__ = "s.bhargava.krishna@gmail.com"
+__status__ = "Made for the Assessment"
 
 # define a function to clean a loaded dataset
 def __clean_data__(adata):
@@ -191,6 +187,7 @@ def make_predictions(data):
     print ("predicting ...")
     preds = pd.DataFrame(__predict_tip__(data), columns=['predictions'])
 
+
     preds.index = data.index
     pd.DataFrame(data.tip_percentage * data.total_amount, columns=['tip_amount']).to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv', index=True)
     preds.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\predictions.csv', index=True)
@@ -200,7 +197,6 @@ def make_predictions(data):
     tips.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\tip_amount.csv', index=True)
     print ("submissions and cleaned data savdataed as submission.csv and cleaned_data.csv respectively")
     print ("run evaluate_predictions() to compare them")
-
 if __name__ == '__main__':
 
     data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv') # address of the data downloaded in the system

@@ -12,6 +12,11 @@ from sklearn.ensemble import RandomForestRegressor
 import warnings
 warnings.filterwarnings('ignore')
 
+__author__ = "Sreepathi Bhargava Krishna"
+__credits__ = ["Sreepathi Bhargava Krishna"]
+__email__ = "s.bhargava.krishna@gmail.com"
+__status__ = "Made for the Assessment"
+
 # define a function to clean a loaded dataset
 def clean_data(adata):
     """
@@ -377,7 +382,6 @@ def machine_learning_using_scikit(data):
 
     print("Processing time:", datetime.datetime.now() - tic)
 
-    train = data1[(data1.Pickup_dt <= '2017-01-31 23:59:59')]
     train = train.loc[np.random.choice(train.index, size=100000, replace=False)]
 
     train['ID'] = train.index
@@ -535,43 +539,6 @@ if __name__ == '__main__':
     print("size before feature engineering:", data.shape)
     data = engineer_features(data)
     print("size after feature engineering:", data.shape)
-
-    ## code to compare the two Tip_percentage identified groups
-    # split data in the two groups
-    data1 = data[data.tip_percentage > 0]
-    data2 = data[data.tip_percentage == 0]
-
-    # generate histograms to compare
-    fig, ax = plt.subplots(1, 2, figsize=(14, 4))
-    data.tip_percentage.hist(bins=20, normed=True, ax=ax[0])
-    ax[0].set_xlabel('Tip (%)')
-    ax[0].set_title('Distribution of Tip (%) - All transactions')
-
-    data1.tip_percentage.hist(bins=20, normed=True, ax=ax[1])
-    ax[1].set_xlabel('Tip (%)')
-    ax[1].set_title('Distribution of Tip (%) - Transaction with tips')
-    ax[1].set_ylabel('Group normed count')
-    plt.savefig('Question4_target_varc.jpeg', format='jpeg')
-    # plt.show()
-
-
-    # Example of exploration of the Fare_amount using the implented code:
-    visualize_continuous_variables(data1, 'fare_amount', outlier='on')
-    # test_classification(data,'fare_amount',[0,25])
-
-    continuous_variables = ['total_amount', 'fare_amount', 'trip_distance', 'trip_duration', 'tolls_amount',
-                            'speed_mph', 'tip_percentage']
-    cor_mat = data1[continuous_variables].corr()
-    fig, ax = plt.subplots(1, 1, figsize=[6, 6])
-    plt.imshow(cor_mat)
-    plt.xticks(range(len(continuous_variables)), continuous_variables, rotation='vertical')
-    plt.yticks(range(len(continuous_variables)), continuous_variables)
-    plt.colorbar()
-    plt.title('Correlation between continuous variables')
-    # plt.show()
-
-    # visualization of the Payment_type
-    # visualize_categories(data1,'payment_type','histogram',[20])
 
     print("Optimizing the classifier...")
 
