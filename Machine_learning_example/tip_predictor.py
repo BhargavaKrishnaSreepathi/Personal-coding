@@ -202,3 +202,4 @@ if __name__ == '__main__':
     data_feb = data.where(data.month == 2)
     test = data_feb.toPandas()
     make_predictions(test, folder_to_be_saved_to)
+    evaluate_predictions(folder_to_be_saved_to)
