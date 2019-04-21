@@ -12,14 +12,24 @@
 
 # The output:
 #    pandas.Series, three files are saved on disk,  prediction.csv, tip_amount.csv and cleaned_data.csv respectively.
-
+from pyspark import SparkFiles, SparkContext, SQLContext
+import seaborn as sns; sns.set(style="ticks", color_codes=True)
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.regression import LinearRegression
 import pandas as pd
 import numpy as np
-import datetime as dt
+import datetime
+import matplotlib.pyplot as plt
 import pickle
-from sklearn import metrics
+from scipy.stats import ttest_ind, lognorm, chisquare
+from tabulate import tabulate #pretty print of tables. source: http://txt.arboreus.com/2013/03/13/pretty-print-tables-in-python.html
+from sklearn import metrics  # model optimization and valuation tools
+from sklearn.model_selection import GridSearchCV, cross_validate, cross_val_score  # Perforing grid search
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestRegressor
 import warnings
-
+from pyspark.sql.types import *
+from pyspark.sql.functions import *
 warnings.filterwarnings('ignore')
 
 __author__ = "Sreepathi Bhargava Krishna"
@@ -28,7 +38,7 @@ __email__ = "s.bhargava.krishna@gmail.com"
 __status__ = "Made for the Assessment"
 
 # define a function to clean a loaded dataset
-def __clean_data__(adata):
+def __clean_data__(data):
     """
     This function cleans the input dataframe adata:
     . drop Ehail_fee [99% transactions are NaNs]
@@ -42,57 +52,53 @@ def __clean_data__(adata):
     output:
         pandas.dataframe
     """
-    ## make a copy of the input
-    data = adata.copy()
+    print ("deriving time variables...")
+
+    # we will take a snippet of the data for exploration.
+    data = data.withColumnRenamed('lpep_dropoff_datetime', 'Dropoff_dt')
+    data = data.withColumnRenamed('lpep_pickup_datetime', 'Pickup_dt')
+
+    data = data.withColumn('Pickup_dt', unix_timestamp('Pickup_dt', "dd/MM/yyyy hh:mm:ss a").cast(TimestampType()))
+    data = data.withColumn('Dropoff_dt', unix_timestamp('Dropoff_dt', "dd/MM/yyyy hh:mm:ss a").cast(TimestampType()))
+
+    data = data.withColumn("month", month('Pickup_dt').cast(IntegerType()))
+    data = data.withColumn("hour", hour('Pickup_dt').cast(IntegerType()))
+    data = data.withColumn("week_day", dayofweek('Pickup_dt').cast(IntegerType()))
+    data = data.withColumn("month_day", dayofmonth('Pickup_dt').cast(IntegerType()))
+
     ## drop Ehail_fee: 99% of its values are NaNs
     if 'ehail_fee' in data.columns:
-        data.drop('ehail_fee', axis=1, inplace=True)
-
-    ##  replace missing values in Trip_type with the most frequent value 1
-    data['trip_type'] = data['trip_type'].replace(np.NaN, 1)
+        data = data.drop('ehail_fee')
 
     ## replace all values that are not allowed as per the variable dictionary with the most frequent allowable value
     # remove negative values from Total amound and Fare_amount
-    data.total_amount = data.total_amount.abs()
-    data.fare_amount = data.fare_amount.abs()
-    data.improvement_surcharge = data.improvement_surcharge.abs()
-    data.tip_amount = data.tip_amount.abs()
-    data.tolls_amount = data.tolls_amount.abs()
-    data.mta_tax = data.mta_tax.abs()
+
+    data = data.withColumn('total_amount', abs(data.total_amount).cast(FloatType()))
+    data = data.withColumn('fare_amount', abs(data.fare_amount).cast(FloatType()))
+    data = data.withColumn('improvement_surcharge', abs(data.improvement_surcharge).cast(FloatType()))
+    data = data.withColumn('tip_amount', abs(data.tip_amount).cast(FloatType()))
+    data = data.withColumn('tolls_amount', abs(data.tolls_amount).cast(FloatType()))
+    data = data.withColumn('mta_tax', abs(data.mta_tax).cast(FloatType()))
 
     # RateCodeID
-    indices_oi = data[~((data.RatecodeID >= 1) & (data.RatecodeID <= 6))].index
-    data.loc[indices_oi, 'RatecodeID'] = 2  # 2 = Cash payment was identified as the common method
+    data = data.withColumn('RatecodeID', when(col('RatecodeID') > '6', 1).otherwise(col('RatecodeID')).cast(FloatType()))
 
-    # Extra
-    indices_oi = data[~((data.extra == 0) | (data.extra == 0.5) | (data.extra == 1))].index
-    data.loc[indices_oi, 'extra'] = 0  # 0 was identified as the most frequent value
+    # Extra   # 0 was identified as the most frequent value
+    data = data.withColumn('extra', when(col('extra') < '0', 0).otherwise(col('extra')).cast(FloatType()))
+    data = data.withColumn('extra', when(col('extra') > '1', 0).otherwise(col('extra')).cast(FloatType()))
 
-    # Total_amount: the minimum charge is 2.5, so I will replace every thing less than 2.5 by the median 11.76 (pre-obtained in analysis)
-    indices_oi = data[(data.total_amount < 2.5)].index
-    data.loc[indices_oi, 'total_amount'] = 11.15
+    # Total_amount: the minimum charge is 2.5, so I will replace every thing less than 2.5 by the median 11.15 (pre-obtained in analysis)
+    data = data.withColumn('total_amount', when(col('total_amount') < '2.5', 11.15).otherwise(col('total_amount')).cast(FloatType()))
 
-    # encode categorical to numeric (I avoid to use dummy to keep dataset small)
-    if data.store_and_fwd_flag.dtype.name != 'int64':
-        data['store_and_fwd_flag'] = (data.store_and_fwd_flag == 'Y') * 1
-
-    # rename time stamp variables and convert them to the right format
-    data.rename(columns={'lpep_pickup_datetime': 'Pickup_dt', 'lpep_dropoff_datetime': 'Dropoff_dt'}, inplace=True)
-    data['Pickup_dt'] = data.Pickup_dt.apply(lambda x:dt.datetime.strptime(x,"%m/%d/%Y %I:%M:%S %p"))
-    data['Dropoff_dt'] = data.Dropoff_dt.apply(lambda x:dt.datetime.strptime(x,"%m/%d/%Y %I:%M:%S %p"))
+    print ("Done cleaning")
 
     return data
 
 
 # Function to run the feature engineering
-def __engineer_features__(adata):
+def __engineer_features__(data):
     """
     This function create new variables based on present variables in the dataset adata. It creates:
-    . Week: int {1,2,3,4,5}, Week a transaction was done
-    . Week_day: int [0-6], day of the week a transaction was done
-    . Month_day: int [0-30], day of the month a transaction was done
-    . Hour: int [0-23], hour the day a transaction was done
-    . Shift type: int {1=(7am to 3pm), 2=(3pm to 11pm) and 3=(11pm to 7am)}, shift of the day
     . Speed_mph: float, speed of the trip
     . Tip_percentage: float, target variable
     . With_tip: int {0,1}, 1 = transaction with tip, 0 transction without tip
@@ -102,42 +108,23 @@ def __engineer_features__(adata):
     output:
         pandas.dataframe
     """
-
-    # make copy of the original dataset
-    data = adata.copy()
-
-    # derive time variables
-    ref_week = dt.datetime(2017, 1, 1).isocalendar()[1]  # first week of september in 2015
-    data['Week'] = data.Pickup_dt.apply(lambda x: x.isocalendar()[1]) - ref_week + 1
-    data['Week_day'] = data.Pickup_dt.apply(lambda x: x.isocalendar()[2])
-    data['Month_day'] = data.Pickup_dt.apply(lambda x: x.day)
-    data['Hour'] = data.Pickup_dt.apply(lambda x: x.hour)
-    # data.rename(columns={'Pickup_hour':'Hour'},inplace=True)
-
-    # create shift variable:  1=(7am to 3pm), 2=(3pm to 11pm) and 3=(11pm to 7am)
-    data['shift_type'] = np.NAN
-    data.loc[data[(data.Hour >= 7) & (data.Hour < 15)].index, 'shift_type'] = 1
-    data.loc[data[(data.Hour >= 15) & (data.Hour < 23)].index, 'shift_type'] = 2
-    data.loc[data[data.shift_type.isnull()].index, 'shift_type'] = 3
-
     # Trip duration
-    data['trip_duration'] = ((data.Dropoff_dt - data.Pickup_dt).apply(lambda x: x.total_seconds() / 60.))
+    data = data.withColumn('trip_duration', ((unix_timestamp('Dropoff_dt', format="dd/MM/yyyy hh:mm:ss a") - unix_timestamp('Pickup_dt', format="dd/MM/yyyy hh:mm:ss a"))/60.0).cast(FloatType()))
+    data = data.where(col('trip_duration') > 0.0)
+    data = data.where(col('trip_distance') > 0.1) # making sure the distance is atleast 0.1 miles
 
     # create variable for Speed
-    data['speed_mph'] = data.trip_distance / (data.trip_duration / 60)
-    # replace all NaNs values and values >240mph by a values sampled from a random distribution of
-    # mean 12.9 and  standard deviation 6.8mph. These values were extracted from the distribution
-    indices_oi = data[(data.speed_mph.isnull()) | (data.speed_mph > 200)].index
-    data.loc[indices_oi, 'speed_mph'] = np.abs(np.random.normal(loc=12.9, scale=6.8, size=len(indices_oi)))
+    data = data.withColumn('speed_mph', (col('trip_distance') / (col('trip_duration') / 60.0)).cast(FloatType()))
+    data = data.withColumn('speed_mph', when(col('speed_mph') > '200', 12.9).otherwise(col('speed_mph')).cast(FloatType()))
+    data = data.withColumn('speed_mph', when(col('speed_mph') < '0', 12.9).otherwise(col('speed_mph')).cast(FloatType()))
 
     # create tip percentage variable
-    data['tip_percentage'] = 100 * data.tip_amount / data.total_amount
+    data = data.withColumn('tip_percentage', 100 * (col('tip_amount')/col('total_amount')).cast(FloatType()))
 
     # create with_tip variable
-    data['with_tip'] = (data.tip_percentage > 0) * 1
+    data = data.withColumn('with_tip', when(col('tip_percentage') > 0.0, 1).otherwise(0).cast(IntegerType()))
 
     return data
-
 
 
 def __predict_tip__(transaction):
@@ -147,10 +134,10 @@ def __predict_tip__(transaction):
     instead of calling this function immediately, consider calling it from "make_predictions"
     """
     # load models
-    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_classifier.pkl', 'rb') as fid:
+    with open(r'C:\Users\krish\Desktop\my_classifier.pkl', 'rb') as fid:
         classifier = pickle.load(fid)
         fid.close()
-    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_regressor.pkl', 'rb') as fid:
+    with open(r'C:\Users\krish\Desktop\my_regressor.pkl', 'rb') as fid:
         regressor = pickle.load(fid)
         fid.close()
 
@@ -182,8 +169,6 @@ def make_predictions(data):
     the outputs are saved on disk: submissions and cleaned data saved as submission.csv and cleaned_data.csv respectively
     """
 
-    print ("creating features ...")
-    data = __engineer_features__(data)
     print ("predicting ...")
     preds = pd.DataFrame(__predict_tip__(data), columns=['predictions'])
 
@@ -192,15 +177,27 @@ def make_predictions(data):
     pd.DataFrame(data.tip_percentage * data.total_amount, columns=['tip_amount']).to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv', index=True)
     preds.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\predictions.csv', index=True)
     tips = preds['predictions'] * data.total_amount / 100.0
-    tips.index = data.index
+    tip_amount_actual = data.tip_amount
+    tips_prediction = pd.DataFrame({'tips': tips, 'tip_amount_actual': tip_amount_actual})
+    tips_prediction.index = data.index
 
-    tips.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\tip_amount.csv', index=True)
+    tips_prediction.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\tip_amount.csv', index=True)
     print ("submissions and cleaned data savdataed as submission.csv and cleaned_data.csv respectively")
     print ("run evaluate_predictions() to compare them")
+
 if __name__ == '__main__':
 
-    data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv') # address of the data downloaded in the system
+    path = r"C:\Users\krish\Downloads/2017_Green_Taxi_Trip_Data.csv"
+
+    sc = SparkContext()
+    sc.addFile(path)
+    sqlContext = SQLContext(sc)
+    data = sqlContext.read.csv(SparkFiles.get("2017_Green_Taxi_Trip_Data.csv"), header=True, inferSchema=True)
     print("cleaning ...")
     data = __clean_data__(data)
-    test = data[(data.Pickup_dt > '2017-01-31 23:59:59') & (data.Pickup_dt <= '2017-02-28 23:59:59')]
+    print ("creating features ...")
+    data = __engineer_features__(data)
+
+    data_feb = data.where(data.month == 2)
+    test = data_feb.toPandas()
     make_predictions(test)

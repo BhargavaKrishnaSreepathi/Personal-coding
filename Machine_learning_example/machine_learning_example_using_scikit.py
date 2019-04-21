@@ -119,11 +119,16 @@ def engineer_features(adata):
 
     # Trip duration
     print ("deriving Trip_duration...")
-    data['trip_duration'] = ((data.Dropoff_dt - data.Pickup_dt).apply(lambda x: x.total_seconds() / 60.))
+    data['trip_duration'] = ((data.Dropoff_dt - data.Pickup_dt).apply(lambda x: x.total_seconds() / 60.0))
+
+    data = data[(data.trip_duration > 0.0)]
 
     # create variable for Speed
     print ("deriving Speed. Make sure to check for possible NaNs and Inf vals...")
-    data['speed_mph'] = data.trip_distance / (data.trip_duration / 60)
+    data['speed_mph'] = data.trip_distance / (data.trip_duration / 60.0)
+    data = data[(data.speed_mph > 0.0)]
+    data = data[(data.trip_distance > 0.1)]
+
     # replace all NaNs values and values >240mph by a values sampled from a random distribution of
     # mean 12.9 and  standard deviation 6.8mph. These values were extracted from the distribution
     indices_oi = data[(data.speed_mph.isnull()) | (data.speed_mph > 240)].index
@@ -527,8 +532,7 @@ def exploring_data(data):
 
 
 if __name__ == '__main__':
-    # Download the September 2015 dataset
-    # data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
+
     data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
 
     data = exploring_data(data)

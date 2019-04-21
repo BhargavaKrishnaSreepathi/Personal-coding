@@ -1,7 +1,6 @@
 
 from pyspark import SparkFiles, SparkContext, SQLContext
 import seaborn as sns; sns.set(style="ticks", color_codes=True)
-
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.regression import LinearRegression
 import pandas as pd
@@ -45,11 +44,6 @@ def clean_data(data):
     data = data.withColumnRenamed('lpep_dropoff_datetime', 'Dropoff_dt')
     data = data.withColumnRenamed('lpep_pickup_datetime', 'Pickup_dt')
 
-    # data = data.withColumn('Pickup_dt', from_unixtime(unix_timestamp(col('Pickup_dt'), 'MM/dd/yyyy hh:mm:ss a'),
-    #                                                 'MM/dd/yyyy hh:mm:ss'))
-    # data = data.withColumn('Dropoff_dt', from_unixtime(unix_timestamp(col('Dropoff_dt'), 'MM/dd/yyyy hh:mm:ss a'),
-    #                                                 'MM/dd/yyyy hh:mm:ss'))
-
     data = data.withColumn('Pickup_dt', unix_timestamp('Pickup_dt', "dd/MM/yyyy hh:mm:ss a").cast(TimestampType()))
     data = data.withColumn('Dropoff_dt', unix_timestamp('Dropoff_dt', "dd/MM/yyyy hh:mm:ss a").cast(TimestampType()))
 
@@ -88,11 +82,6 @@ def clean_data(data):
 def engineer_features(data):
     """
     This function create new variables based on present variables in the dataset adata. It creates:
-    . Week: int {1,2,3,4,5}, Week a transaction was done
-    . Week_day: int [0-6], day of the week a transaction was done
-    . Month_day: int [0-30], day of the month a transaction was done
-    . Hour: int [0-23], hour the day a transaction was done
-    . Shift type: int {1=(7am to 3pm), 2=(3pm to 11pm) and 3=(11pm to 7am)}, shift of the day
     . Speed_mph: float, speed of the trip
     . Tip_percentage: float, target variable
     . With_tip: int {0,1}, 1 = transaction with tip, 0 transction without tip
@@ -103,10 +92,12 @@ def engineer_features(data):
         pandas.dataframe
     """
     # Trip duration
-    data = data.withColumn('trip_duration', ((unix_timestamp('Dropoff_dt', format="dd/MM/yyyy hh:mm:ss") - unix_timestamp('Pickup_dt', format="dd/MM/yyyy hh:mm:ss"))).cast(FloatType()))
+    data = data.withColumn('trip_duration', ((unix_timestamp('Dropoff_dt', format="dd/MM/yyyy hh:mm:ss a") - unix_timestamp('Pickup_dt', format="dd/MM/yyyy hh:mm:ss a"))/60.0).cast(FloatType()))
+    data = data.where(col('trip_duration') > 0.0)
+    data = data.where(col('trip_distance') > 0.1) # making sure the distance is atleast 0.1 miles
 
     # create variable for Speed
-    data = data.withColumn('speed_mph', (col('trip_distance') / col('trip_duration') / 60.0).cast(FloatType()))
+    data = data.withColumn('speed_mph', (col('trip_distance') / (col('trip_duration') / 60.0)).cast(FloatType()))
     data = data.withColumn('speed_mph', when(col('speed_mph') > '200', 12.9).otherwise(col('speed_mph')).cast(FloatType()))
     data = data.withColumn('speed_mph', when(col('speed_mph') < '0', 12.9).otherwise(col('speed_mph')).cast(FloatType()))
 
@@ -114,13 +105,13 @@ def engineer_features(data):
     data = data.withColumn('tip_percentage', 100 * (col('tip_amount')/col('total_amount')).cast(FloatType()))
 
     # create with_tip variable
-    data = data.withColumn('with_tip', when(col('tip_percentage') > 0.0, 1).otherwise(0).cast(FloatType()))
+    data = data.withColumn('with_tip', when(col('tip_percentage') > 0.0, 1).otherwise(0).cast(IntegerType()))
 
     return data
 
 
 # define a function that help to train models and perform cv
-def modelfit(alg, dtrain, predictors, target, scoring_method, performCV=True, printFeatureImportance=True, cv_folds=5):
+def modelfit(alg, dtrain, predictors, target, scoring_method, performCV=True, printFeatureImportance=False, cv_folds=5):
     """
     This functions train the model given as 'alg' by performing cross-validation. It works on both regression and classification
     alg: sklearn model
@@ -160,7 +151,7 @@ def modelfit(alg, dtrain, predictors, target, scoring_method, performCV=True, pr
             feat_imp = pd.Series(alg.feature_importances_, predictors).sort_values(ascending=False)
         feat_imp.plot(kind='bar', title='Feature Importances')
         plt.ylabel('Feature Importe Score')
-        # plt.show()
+        plt.show()
 
 
 # optimize n_estimator through grid search
@@ -299,35 +290,10 @@ if __name__ == '__main__':
 
     print("Optimizing the classifier...")
 
-    # vectorAssembler = VectorAssembler(inputCols=['payment_type', 'total_amount', 'trip_duration', 'speed_mph', 'mta_tax',
-    #               'extra'], outputCol='features')
-    # vhouse_df = vectorAssembler.transform(data_jan)
-    # vhouse_df = vhouse_df.select(['features', 'tip_percentage'])
-    # vhouse_df.show(3)
-    #
-    # splits = vhouse_df.randomSplit([0.7, 0.3])
-    # train_df = splits[0]
-    # test_df = splits[1]
-    #
-    # lr = LinearRegression(featuresCol='features', labelCol='tip_percentage', maxIter=10, regParam=0.3, elasticNetParam=0.8)
-    # lr_model = lr.fit(train_df)
-    # print("Coefficients: " + str(lr_model.coefficients))
-    # print("Intercept: " + str(lr_model.intercept))
-
     gs_cls, gs_rfr = machine_learning_using_scikit(train)
 
     ypred = predict_tip(test)
     print("final mean_squared_error:", metrics.mean_squared_error(ypred, test.tip_percentage))
     print("final r2_score:", metrics.r2_score(ypred, test.tip_percentage))
 
-    df = test.copy()  # make a copy of data
-    df['predictions'] = ypred  # add predictions column
-    df['residuals'] = df.tip_percentage - df.predictions  # calculate residuals
-
-    df.residuals.hist(bins=20)  # plot histogram of residuals
-    plt.yscale('log')
-    plt.xlabel('predicted - real')
-    plt.ylabel('count')
-    plt.title('Residual plot')
-    plt.show()
 
