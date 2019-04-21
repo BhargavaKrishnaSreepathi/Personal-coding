@@ -348,7 +348,7 @@ def predict_tip(transaction):
     # predict tips for those transactions classified as 1
     return clas * gs_rfr.best_estimator_.predict(transaction[reg_predictors])
 
-def machine_learning_using_scikit(data):
+def machine_learning_using_scikit(data, folder_to_be_saved_to):
 
     train = data[(data.Pickup_dt <= '2017-01-31 23:59:59')]  # make a copy of the training set
 
@@ -381,7 +381,7 @@ def machine_learning_using_scikit(data):
     modelfit(gs_cls.best_estimator_, train, predictors, target, 'roc_auc')
 
     # save the best estimator on disk as pickle for a later use
-    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_classifier.pkl', 'wb') as fid:
+    with open(folder_to_be_saved_to + 'my_classifier.pkl', 'wb') as fid:
         pickle.dump(gs_cls.best_estimator_, fid)
         fid.close()
 
@@ -411,7 +411,7 @@ def machine_learning_using_scikit(data):
     modelfit(gs_rfr.best_estimator_, train, predictors, target, 'neg_mean_squared_error')
 
     # save the best estimator on disk as pickle for a later use
-    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_regressor.pkl', 'wb') as fid:
+    with open(folder_to_be_saved_to + 'my_regressor.pkl', 'wb') as fid:
         pickle.dump(gs_rfr.best_estimator_, fid)
         fid.close()
 
@@ -419,7 +419,7 @@ def machine_learning_using_scikit(data):
 
     return gs_cls, gs_rfr
 
-def exploring_data(data):
+def exploring_data(data, folder_to_be_saved_to):
 
     # Print the size of the dataset
     print("Number of rows:", data.shape[0])
@@ -453,7 +453,7 @@ def exploring_data(data):
     ax[1].legend(['data', 'lognormal fit'])
 
     # export the figure
-    plt.savefig('Question2.jpeg', format='jpeg')
+    plt.savefig(folder_to_be_saved_to + 'Question2.jpeg', format='jpeg')
     plt.show()
 
     #
@@ -479,7 +479,7 @@ def exploring_data(data):
     plt.title('Distribution of trip distance by pickup hour')
     # plt.xticks(np.arange(0,30,6)+0.35,range(0,30,6))
     plt.xlim([0, 23])
-    plt.savefig('Question3_1.jpeg', format='jpeg')
+    plt.savefig(folder_to_be_saved_to + 'Question3_1.jpeg', format='jpeg')
     # plt.show()
     print('-----Trip distance by hour of the day-----\n')
     print(tabulate(table1.values.tolist(), ["Hour", "Mean distance", "Median distance"]))
@@ -525,7 +525,7 @@ def exploring_data(data):
     ax[1].set_ylabel('Group normalized trips count')
     ax[1].set_title('B. Hourly distribution of trips')
     ax[1].legend(['Airport trips', 'Non-airport trips'], loc='best', title='group')
-    plt.savefig('Question3_2.jpeg', format='jpeg')
+    plt.savefig(folder_to_be_saved_to + 'Question3_2.jpeg', format='jpeg')
     # plt.show()
 
     return data
@@ -534,8 +534,9 @@ def exploring_data(data):
 if __name__ == '__main__':
 
     data = pd.read_csv(r'C:\Users\krish/Downloads/2017_Green_Taxi_Trip_Data.csv')
+    folder_to_be_saved_to = r"D:\OneDrive\Career Development\Job\NTT_Data/" # the output folder
 
-    data = exploring_data(data)
+    data = exploring_data(data, folder_to_be_saved_to)
 
     data = clean_data(data)
 
@@ -546,7 +547,7 @@ if __name__ == '__main__':
 
     print("Optimizing the classifier...")
 
-    gs_cls, gs_rfr = machine_learning_using_scikit(data)
+    gs_cls, gs_rfr = machine_learning_using_scikit(data, folder_to_be_saved_to)
 
     test = data[(data.Pickup_dt > '2017-01-31 23:59:59') & (data.Pickup_dt <= '2017-02-28 23:59:59')]
     ypred = predict_tip(test)

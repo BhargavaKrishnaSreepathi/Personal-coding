@@ -186,7 +186,7 @@ def predict_tip(transaction):
     # predict tips for those transactions classified as 1
     return clas * gs_rfr.best_estimator_.predict(transaction[reg_predictors])
 
-def machine_learning_using_scikit(data):
+def machine_learning_using_scikit(data, folder_to_be_saved_to):
 
     train = data
     # since the dataset is too big for my system, select a small sample size to carry on training and 5 folds cross validation
@@ -218,7 +218,7 @@ def machine_learning_using_scikit(data):
     modelfit(gs_cls.best_estimator_, train, predictors, target, 'roc_auc')
 
     # save the best estimator on disk as pickle for a later use
-    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_classifier.pkl', 'wb') as fid:
+    with open(folder_to_be_saved_to + 'my_classifier.pkl', 'wb') as fid:
         pickle.dump(gs_cls.best_estimator_, fid)
         fid.close()
 
@@ -248,7 +248,7 @@ def machine_learning_using_scikit(data):
     modelfit(gs_rfr.best_estimator_, train, predictors, target, 'neg_mean_squared_error')
 
     # save the best estimator on disk as pickle for a later use
-    with open(r'D:\OneDrive\Career Development\Job\NTT_Data\my_regressor.pkl', 'wb') as fid:
+    with open(folder_to_be_saved_to + 'my_regressor.pkl', 'wb') as fid:
         pickle.dump(gs_rfr.best_estimator_, fid)
         fid.close()
 
@@ -257,10 +257,11 @@ def machine_learning_using_scikit(data):
     return gs_cls, gs_rfr
 
 if __name__ == '__main__':
-    # Download the September 2015 dataset
-    # data = pd.read_csv(r'C:\Users\krish/Downloads/green_tripdata_2017-01.csv')
+    # Download the NYC taxi dataset of 2017
+    # I have stored them in the following location, change this to the location where you have it saved
 
     path = r"C:\Users\krish\Downloads/2017_Green_Taxi_Trip_Data.csv"
+    folder_to_be_saved_to = r"D:\OneDrive\Career Development\Job\NTT_Data/" # the output folder
 
     sc = SparkContext()
     sc.addFile(path)
@@ -281,16 +282,15 @@ if __name__ == '__main__':
     data_jan = data.where(data.month == 1)
     data_feb = data.where(data.month == 2)
 
-    data_jan.toPandas().to_csv(r"D:\OneDrive\Career Development\Job\NTT_Data\jan_2017.csv")
-    data_feb.toPandas().to_csv(r"D:\OneDrive\Career Development\Job\NTT_Data\feb_2017.csv")
+    data_jan.toPandas().to_csv(folder_to_be_saved_to + "jan_2017.csv")
+    data_feb.toPandas().to_csv(folder_to_be_saved_to + "feb_2017.csv")
 
-    train = pd.read_csv(r"D:\OneDrive\Career Development\Job\NTT_Data\jan_2017.csv")
-    test = pd.read_csv(r"D:\OneDrive\Career Development\Job\NTT_Data\feb_2017.csv")
-
+    train = data_jan.toPandas()
+    test = data_feb.toPandas()
 
     print("Optimizing the classifier...")
 
-    gs_cls, gs_rfr = machine_learning_using_scikit(train)
+    gs_cls, gs_rfr = machine_learning_using_scikit(train, folder_to_be_saved_to)
 
     ypred = predict_tip(test)
     print("final mean_squared_error:", metrics.mean_squared_error(ypred, test.tip_percentage))

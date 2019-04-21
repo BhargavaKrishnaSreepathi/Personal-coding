@@ -38,7 +38,7 @@ __email__ = "s.bhargava.krishna@gmail.com"
 __status__ = "Made for the Assessment"
 
 # define a function to clean a loaded dataset
-def __clean_data__(data):
+def __clean_data__(data, folder_to_be_saved_to):
     """
     This function cleans the input dataframe adata:
     . drop Ehail_fee [99% transactions are NaNs]
@@ -96,7 +96,7 @@ def __clean_data__(data):
 
 
 # Function to run the feature engineering
-def __engineer_features__(data):
+def __engineer_features__(data, folder_to_be_saved_to):
     """
     This function create new variables based on present variables in the dataset adata. It creates:
     . Speed_mph: float, speed of the trip
@@ -127,17 +127,17 @@ def __engineer_features__(data):
     return data
 
 
-def __predict_tip__(transaction):
+def __predict_tip__(transaction, folder_to_be_saved_to):
     """
     This function predicts the percentage tip expected on 1 transaction
     transaction: pandas.dataframe
     instead of calling this function immediately, consider calling it from "make_predictions"
     """
     # load models
-    with open(r'C:\Users\krish\Desktop\my_classifier.pkl', 'rb') as fid:
+    with open('my_classifier.pkl', 'rb') as fid:
         classifier = pickle.load(fid)
         fid.close()
-    with open(r'C:\Users\krish\Desktop\my_regressor.pkl', 'rb') as fid:
+    with open('my_regressor.pkl', 'rb') as fid:
         regressor = pickle.load(fid)
         fid.close()
 
@@ -152,17 +152,17 @@ def __predict_tip__(transaction):
     return clas * regressor.predict(transaction[reg_predictors])
 
 
-def evaluate_predictions():
+def evaluate_predictions(folder_to_be_saved_to):
     """
     This looks for cleaned and predicted data set on disk and compare them
     """
-    cleaned = pd.read_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv')
-    predictions = pd.read_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\submission.csv')
+    cleaned = pd.read_csv(folder_to_be_saved_to + 'cleaned_data.csv')
+    predictions = pd.read_csv(folder_to_be_saved_to + 'submission.csv')
     print ("mean squared error:", metrics.mean_squared_error(cleaned.tip_percentage, predictions.predictions))
     print ("r2 score:", metrics.r2_score(cleaned.tip_percentage, predictions.predictions))
 
 
-def make_predictions(data):
+def make_predictions(data, folder_to_be_saved_to):
     """
     This makes sure that data has the right format and then send it to the prediction model to be predicted
     data: pandas.dataframe, raw data from the website
@@ -174,30 +174,31 @@ def make_predictions(data):
 
 
     preds.index = data.index
-    pd.DataFrame(data.tip_percentage * data.total_amount, columns=['tip_amount']).to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\cleaned_data.csv', index=True)
-    preds.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\predictions.csv', index=True)
+    pd.DataFrame(data.tip_percentage * data.total_amount, columns=['tip_amount']).to_csv(folder_to_be_saved_to + 'cleaned_data.csv', index=True)
+    preds.to_csv(folder_to_be_saved_to + 'predictions.csv', index=True)
     tips = preds['predictions'] * data.total_amount / 100.0
     tip_amount_actual = data.tip_amount
     tips_prediction = pd.DataFrame({'tips': tips, 'tip_amount_actual': tip_amount_actual})
     tips_prediction.index = data.index
 
-    tips_prediction.to_csv(r'D:\OneDrive\Career Development\Job\NTT_Data\tip_amount.csv', index=True)
+    tips_prediction.to_csv(folder_to_be_saved_to + 'tip_amount.csv', index=True)
     print ("submissions and cleaned data savdataed as submission.csv and cleaned_data.csv respectively")
     print ("run evaluate_predictions() to compare them")
 
 if __name__ == '__main__':
 
-    path = r"C:\Users\krish\Downloads/2017_Green_Taxi_Trip_Data.csv"
+    path = r"C:\Users\krish\Downloads/2017_Green_Taxi_Trip_Data.csv" # the path for the data
+    folder_to_be_saved_to = r"D:\OneDrive\Career Development\Job\NTT_Data/" # the output folder
 
     sc = SparkContext()
     sc.addFile(path)
     sqlContext = SQLContext(sc)
     data = sqlContext.read.csv(SparkFiles.get("2017_Green_Taxi_Trip_Data.csv"), header=True, inferSchema=True)
     print("cleaning ...")
-    data = __clean_data__(data)
+    data = __clean_data__(data, folder_to_be_saved_to)
     print ("creating features ...")
-    data = __engineer_features__(data)
+    data = __engineer_features__(data, folder_to_be_saved_to)
 
     data_feb = data.where(data.month == 2)
     test = data_feb.toPandas()
-    make_predictions(test)
+    make_predictions(test, folder_to_be_saved_to)
