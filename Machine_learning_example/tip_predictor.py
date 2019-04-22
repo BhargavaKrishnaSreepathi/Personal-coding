@@ -3,30 +3,21 @@
 # the Random Forest Gradient both provided in scikit-learn
 
 # The input:
-#    pandas.dataframe with columns: This should be in the same format as downloaded from the website
+#    spark.dataframe with columns: This should be in the same format as downloaded from the website
 
-# The data frame go through the following pipeliine:
+# The data frame go through the following pipeline:
 # 1. Cleaning
 # 2. Creation of derived variables
 # 3. Making predictions
 
 # The output:
 #    pandas.Series, three files are saved on disk,  prediction.csv, tip_amount.csv and cleaned_data.csv respectively.
+
 from pyspark import SparkFiles, SparkContext, SQLContext
 import seaborn as sns; sns.set(style="ticks", color_codes=True)
-from pyspark.ml.feature import VectorAssembler
-from pyspark.ml.regression import LinearRegression
 import pandas as pd
-import numpy as np
-import datetime
-import matplotlib.pyplot as plt
 import pickle
-from scipy.stats import ttest_ind, lognorm, chisquare
-from tabulate import tabulate #pretty print of tables. source: http://txt.arboreus.com/2013/03/13/pretty-print-tables-in-python.html
 from sklearn import metrics  # model optimization and valuation tools
-from sklearn.model_selection import GridSearchCV, cross_validate, cross_val_score  # Perforing grid search
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import RandomForestRegressor
 import warnings
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
@@ -48,9 +39,9 @@ def __clean_data__(data, folder_to_be_saved_to):
     . rename pickup and dropff time variables (for later use)
 
     input:
-        adata: pandas.dataframe
+        data: dataframe
     output:
-        pandas.dataframe
+        dataframe
     """
     print ("deriving time variables...")
 
@@ -104,9 +95,9 @@ def __engineer_features__(data, folder_to_be_saved_to):
     . With_tip: int {0,1}, 1 = transaction with tip, 0 transction without tip
 
     input:
-        adata: pandas.dataframe
+        adata: dataframe
     output:
-        pandas.dataframe
+        dataframe
     """
     # Trip duration
     data = data.withColumn('trip_duration', ((unix_timestamp('Dropoff_dt', format="dd/MM/yyyy hh:mm:ss a") - unix_timestamp('Pickup_dt', format="dd/MM/yyyy hh:mm:ss a"))/60.0).cast(FloatType()))

@@ -2,13 +2,8 @@ import pandas as pd
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
-import pickle
 from scipy.stats import ttest_ind, lognorm, chisquare
 from tabulate import tabulate #pretty print of tables. source: http://txt.arboreus.com/2013/03/13/pretty-print-tables-in-python.html
-from sklearn import metrics  # model optimization and valuation tools
-from sklearn.model_selection import GridSearchCV, cross_validate, cross_val_score  # Perforing grid search
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import RandomForestRegressor
 import warnings
 warnings.filterwarnings('ignore')
 
