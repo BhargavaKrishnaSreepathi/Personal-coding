@@ -38,22 +38,22 @@ for i in range(len(train)):
         train.loc[i, 'class_text'] = 1
 
     if 'floorplan' in train.loc[i]['labels']:
-        train.loc[i, 'class_floorplan'] = 1
+        train.loc[i, 'class_floorplan'] = 2
 
     if 'map' in train.loc[i]['labels']:
-        train.loc[i, 'class_map'] = 1
+        train.loc[i, 'class_map'] = 3
 
     if 'face' in train.loc[i]['labels']:
-        train.loc[i, 'class_face'] = 1
+        train.loc[i, 'class_face'] = 4
 
     if 'collage' in train.loc[i]['labels']:
-        train.loc[i, 'class_collage'] = 1
+        train.loc[i, 'class_collage'] = 5
 
     if 'property' in train.loc[i]['labels']:
-        train.loc[i, 'class_property'] = 1
+        train.loc[i, 'class_property'] = 6
 
     if 'siteplan' in train.loc[i]['labels']:
-        train.loc[i, 'class_siteplan'] = 1
+        train.loc[i, 'class_siteplan'] = 7
 
     # img = Image.open(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation/all_images\image_moderation_images/' + str(train.loc[i, 'images_id']))
     # img = img.resize((IMG_SIZE, IMG_SIZE), Image.ANTIALIAS)

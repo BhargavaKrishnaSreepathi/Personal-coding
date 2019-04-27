@@ -30,22 +30,22 @@ for i in range(len(train)):
         train.loc[i, 'class_text'] = 1
 
     if 'floorplan' in train.loc[i]['labels']:
-        train.loc[i, 'class_floorplan'] = 1
+        train.loc[i, 'class_floorplan'] = 2
 
     if 'map' in train.loc[i]['labels']:
-        train.loc[i, 'class_map'] = 1
+        train.loc[i, 'class_map'] = 3
 
     if 'face' in train.loc[i]['labels']:
-        train.loc[i, 'class_face'] = 1
+        train.loc[i, 'class_face'] = 4
 
     if 'collage' in train.loc[i]['labels']:
-        train.loc[i, 'class_collage'] = 1
+        train.loc[i, 'class_collage'] = 5
 
     if 'property' in train.loc[i]['labels']:
-        train.loc[i, 'class_property'] = 1
+        train.loc[i, 'class_property'] = 6
 
     if 'siteplan' in train.loc[i]['labels']:
-        train.loc[i, 'class_siteplan'] = 1
+        train.loc[i, 'class_siteplan'] = 7
 
     # img = Image.open(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation/all_images\image_moderation_images/' + str(train.loc[i, 'images_id']))
     # img = img.resize((IMG_SIZE, IMG_SIZE), Image.ANTIALIAS)
@@ -62,7 +62,7 @@ for i in range(len(train)):
 
 train_images_T = np.array(train_data_original).T
 train_labels_T = np.array(train_labels_original).T
-
+print ('Data Processed')
 
 def create_placeholders(n_x, n_y):
     """
@@ -180,6 +180,8 @@ def compute_cost(Z3, Y):
 
     ### START CODE HERE ### (1 line of code)
     cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
+    # cost = tf.reduce_mean(logits, labels)
+
     ### END CODE HERE ###
 
     return cost
@@ -227,7 +229,7 @@ def random_mini_batches(X, Y, mini_batch_size=64, seed=0):
     return mini_batches
 
 def model(X_train, Y_train, X_test, Y_test, learning_rate=0.0001,
-          num_epochs=5, minibatch_size=32, print_cost=True):
+          num_epochs=10, minibatch_size=32, print_cost=True):
     """
     Implements a three-layer tensorflow neural network: LINEAR->RELU->LINEAR->RELU->LINEAR->SOFTMAX.
 
@@ -312,28 +314,32 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate=0.0001,
             if print_cost == True and epoch % 5 == 0:
                 costs.append(epoch_cost)
 
-        # plot the cost
-        plt.plot(np.squeeze(costs))
-        plt.ylabel('cost')
-        plt.xlabel('iterations (per tens)')
-        plt.title("Learning rate =" + str(learning_rate))
-        plt.show()
+        # # plot the cost
+        # plt.plot(np.squeeze(costs))
+        # plt.ylabel('cost')
+        # plt.xlabel('iterations (per tens)')
+        # plt.title("Learning rate =" + str(learning_rate))
+        # plt.show()
 
         # lets save the parameters in a variable
         parameters = sess.run(parameters)
         print("Parameters have been trained!")
 
         # Calculate the correct predictions
-        correct_prediction = tf.equal(tf.argmax(Z3), tf.argmax(Y))
+        correct_prediction = tf.equal(Z3, Y)
 
         # Calculate accuracy on the test set
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-
+        # f1_score = tf.contrib.metrics.f1_score(Y_train, correct_prediction, weights=None, num_thresholds=200, metrics_collections=None, updates_collections=None, name=None)
+        # print (f1_score)
         print("Train Accuracy:", accuracy.eval({X: X_train, Y: Y_train}))
         print("Test Accuracy:", accuracy.eval({X: X_test, Y: Y_test}))
-        # saver = tf.train.Saver()
-        #
-        # saver.save(sess, 'my_test_model')
+
+        saver = tf.train.Saver()
+        sess = tf.Session()
+        sess.run(tf.global_variables_initializer())
+        saver.save(sess, 'my_test_model')
+
 
         return parameters
 
@@ -341,3 +347,78 @@ parameters = model(train_images_T, train_labels_T, train_images_T, train_labels_
 
 print (parameters)
 
+
+def forward_propagation_for_predict(X, parameters):
+    """
+    Implements the forward propagation for the model: LINEAR -> RELU -> LINEAR -> RELU -> LINEAR -> SOFTMAX
+
+    Arguments:
+    X -- input dataset placeholder, of shape (input size, number of examples)
+    parameters -- python dictionary containing your parameters "W1", "b1", "W2", "b2", "W3", "b3"
+                  the shapes are given in initialize_parameters
+    Returns:
+    Z3 -- the output of the last LINEAR unit
+    """
+
+    # Retrieve the parameters from the dictionary "parameters"
+    W1 = parameters['W1']
+    b1 = parameters['b1']
+    W2 = parameters['W2']
+    b2 = parameters['b2']
+    W3 = parameters['W3']
+    b3 = parameters['b3']
+    # Numpy Equivalents:
+    Z1 = tf.add(tf.matmul(W1, X), b1)  # Z1 = np.dot(W1, X) + b1
+    A1 = tf.nn.relu(Z1)  # A1 = relu(Z1)
+    Z2 = tf.add(tf.matmul(W2, A1), b2)  # Z2 = np.dot(W2, a1) + b2
+    A2 = tf.nn.relu(Z2)  # A2 = relu(Z2)
+    Z3 = tf.add(tf.matmul(W3, A2), b3)  # Z3 = np.dot(W3,Z2) + b3
+
+    return Z3
+
+def predict(X, parameters):
+    W1 = tf.convert_to_tensor(parameters["W1"])
+    b1 = tf.convert_to_tensor(parameters["b1"])
+    W2 = tf.convert_to_tensor(parameters["W2"])
+    b2 = tf.convert_to_tensor(parameters["b2"])
+    W3 = tf.convert_to_tensor(parameters["W3"])
+    b3 = tf.convert_to_tensor(parameters["b3"])
+
+    params = {"W1": W1,
+              "b1": b1,
+              "W2": W2,
+              "b2": b2,
+              "W3": W3,
+              "b3": b3}
+
+    x = tf.placeholder("float", [IMG_SIZE*IMG_SIZE*3, 1])
+
+    z3 = forward_propagation_for_predict(x, params)
+    print (z3)
+    p = z3
+
+    sess = tf.Session()
+    prediction = sess.run(p, feed_dict={x: X})
+
+    return prediction
+
+## START CODE HERE ## (PUT YOUR IMAGE NAME)
+## END CODE HERE ##
+
+img = imageio.imread(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation/all_images\image_moderation_images/' + '3853906.jpg')
+arr = np.array(img)
+test_data_original = []
+
+if len(arr.shape) > 2:
+
+    test_data_original.append(img.flatten())
+
+
+test_images_T = np.array(test_data_original).T
+
+# We preprocess your image to fit your algorithm.
+
+
+my_image_prediction = predict(test_images_T, parameters)
+
+print("Your algorithm predicts: y = " + str(np.squeeze(my_image_prediction)))
