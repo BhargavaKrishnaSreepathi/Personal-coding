@@ -12,6 +12,7 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers. normalization import BatchNormalization
 import numpy as np
+from keras.models import model_from_json
 
 def custom_classification(input):
 
@@ -67,7 +68,7 @@ def custom_classification(input):
     model.add(Dense(1, activation = 'sigmoid'))
 
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics = ['accuracy'])
-    model.fit(trainImages, trainLabels, batch_size = 100, epochs = 10, verbose = 1)
+    model.fit(trainImages, trainLabels, batch_size = 100, epochs = 1, verbose = 1)
     loss, acc = model.evaluate(trainImages, trainLabels, verbose = 0)
 
     scores = model.evaluate(trainImages, trainLabels, verbose=0)
@@ -75,10 +76,10 @@ def custom_classification(input):
 
     # serialize model to JSON
     model_json = model.to_json()
-    with open("model_" + input + ".json", "w") as json_file:
+    with open("model_gpu_" + input + ".json", "w") as json_file:
         json_file.write(model_json)
     # serialize weights to HDF5
-    model.save_weights("model_" + input + ".h5")
+    model.save_weights("model_gpu_" + input + ".h5")
     print("Saved model to disk")
 
     #
@@ -107,5 +108,39 @@ def custom_classification(input):
 
 # class_labels = ['text', 'floorplan', 'map', 'face', 'collage', 'property', 'siteplan']
 
-custom_classification('map')
-custom_classification('floorplan')
+# custom_classification('text')
+# custom_classification('floorplan')
+# custom_classification('map')
+# custom_classification('face')
+# custom_classification('collage')
+# custom_classification('property')
+# custom_classification('siteplan')
+custom_classification('text')
+
+
+# # load json and create model
+# input = 'text'
+# json_file = open(r'C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_' + input + '.json', 'r')
+# loaded_model_json = json_file.read()
+# json_file.close()
+# loaded_model = model_from_json(loaded_model_json)
+# # load weights into new model
+# loaded_model.load_weights(r"C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_" + input + ".h5")
+# print("Loaded model from disk")
+#
+# test = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\imgs_train.csv')    # reading the csv file
+#
+# test_data_original = []
+# IMG_SIZE = 299
+#
+# for i in range(len(test)):
+#     # img = Image.open(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation/all_images\image_moderation_images/' + str(train.loc[i, 'images_id']))
+#     # img = img.resize((IMG_SIZE, IMG_SIZE), Image.ANTIALIAS)
+#     img = imageio.imread(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation/all_images\image_moderation_images/' + str(test.loc[i, 'images_id']))
+#     arr = np.array(img)
+#     if len(arr.shape) > 2:
+#         test_data_original.append([np.array(img)])
+#
+# testImages = np.array([i[0] for i in test_data_original]).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+#
+# ynew = loaded_model.predict_classes(testImages)
