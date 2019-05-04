@@ -2,11 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8ec9d6e4-8a45-43e8-8520-c663d01d9909" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/chatbot/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chatbot/chatbot_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Personal-coding.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Personal-coding.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_face.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_face.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_face.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_face.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_floorplan.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_floorplan.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_floorplan.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_floorplan.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_map.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_map.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_map.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_map.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_text.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_text.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/rotating_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/rotating_images.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,29 +33,69 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/art-transfer-deep-learning/deep-learning-main.py">
+        <entry file="file://$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="27" column="95" selection-start-line="27" selection-start-column="95" selection-end-line="27" selection-end-column="95" />
+            <state relative-caret-position="2176">
+              <caret line="137" column="19" selection-start-line="137" selection-start-column="19" selection-end-line="137" selection-end-column="19" />
               <folding>
-                <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/chatbot/__init__.py">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/Machine_learning_example/multiple_file_classification.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1972">
+              <caret line="129" column="1" selection-start-line="129" selection-start-column="1" selection-end-line="129" selection-end-column="1" />
+              <folding>
+                <element signature="e#1#20#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/chatbot/chatbot_test.py">
+        <entry file="file://$PROJECT_DIR$/Machine_learning_example/rotating_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="64" selection-start-line="11" selection-start-column="64" selection-end-line="11" selection-end-column="64" />
+            <state relative-caret-position="319">
+              <caret line="131" selection-start-line="131" selection-end-line="131" />
               <folding>
-                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#1#20#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1309">
+              <caret line="83" column="44" selection-start-line="83" selection-start-column="44" selection-end-line="83" selection-end-column="44" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" selection-start-line="3" selection-end-line="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Machine_learning_example/image_predictor.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1241">
+              <caret line="86" selection-start-line="86" selection-end-line="86" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -76,6 +127,15 @@
         <option value="$PROJECT_DIR$/Binh-and-Korn-test-function.py" />
         <option value="$PROJECT_DIR$/art-transfer-deep-learning/deep-learning-main.py" />
         <option value="$PROJECT_DIR$/chatbot/chatbot_test.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/trial_2.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/image_predictor.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/multiple_file_classification.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/furthering_model.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/rotating_images.py" />
       </list>
     </option>
   </component>
@@ -90,6 +150,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -100,18 +161,27 @@
             <path>
               <item name="Personal-coding" type="b2602c69:ProjectViewProjectNode" />
               <item name="Personal-coding" type="462c0819:PsiDirectoryNode" />
+              <item name="art-transfer-deep-learning" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Personal-coding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Personal-coding" type="462c0819:PsiDirectoryNode" />
               <item name="chatbot" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Personal-coding" type="b2602c69:ProjectViewProjectNode" />
               <item name="Personal-coding" type="462c0819:PsiDirectoryNode" />
-              <item name="MODE-python" type="462c0819:PsiDirectoryNode" />
+              <item name="data-visualization" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Personal-coding" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Personal-coding" type="462c0819:PsiDirectoryNode" />
+              <item name="Machine_learning_example" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -121,6 +191,9 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\models" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\krish\Documents\GitHub\Personal-coding\chatbot" />
       <recent name="C:\Users\Bhargava\Documents\GitHub\Personal-coding\MODE-R" />
@@ -138,7 +211,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.deep-learning-main">
+  <component name="RunManager" selected="Python.rotating_images">
     <configuration default="true" type="js.build_tools.gulp">
       <node-interpreter>project</node-interpreter>
       <node-options />
@@ -148,7 +221,7 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="Binh-and-Korn-test-function" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="furthering_7_model" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Personal-coding" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -156,12 +229,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Machine_learning_example" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Binh-and-Korn-test-function.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -170,7 +242,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Non-dominated-sorting" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="predictor_7_post_processing" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Personal-coding" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -178,12 +250,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Machine_learning_example" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Non-dominated-sorting.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -192,7 +263,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="deep-learning-main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="predictor_and_post_processing" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Personal-coding" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -200,12 +271,53 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/art-transfer-deep-learning" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Machine_learning_example" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/art-transfer-deep-learning/deep-learning-main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="prop_guru_kaggle_running_version" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Personal-coding" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Machine_learning_example" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="rotating_images" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Personal-coding" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Machine_learning_example" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Machine_learning_example/rotating_images.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -230,15 +342,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.Non-dominated-sorting" />
-      <item itemvalue="Python.Binh-and-Korn-test-function" />
-      <item itemvalue="Python.deep-learning-main" />
+      <item itemvalue="Python.predictor_and_post_processing" />
+      <item itemvalue="Python.prop_guru_kaggle_running_version" />
+      <item itemvalue="Python.predictor_7_post_processing" />
+      <item itemvalue="Python.furthering_7_model" />
+      <item itemvalue="Python.rotating_images" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.deep-learning-main" />
-        <item itemvalue="Python.Binh-and-Korn-test-function" />
-        <item itemvalue="Python.Non-dominated-sorting" />
+        <item itemvalue="Python.rotating_images" />
+        <item itemvalue="Python.furthering_7_model" />
+        <item itemvalue="Python.predictor_7_post_processing" />
+        <item itemvalue="Python.prop_guru_kaggle_running_version" />
+        <item itemvalue="Python.predictor_and_post_processing" />
       </list>
     </recent_temporary>
   </component>
@@ -263,20 +379,21 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19072708" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2028451" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.52112675" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.26397145" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.43336946" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.26327193" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Python Console" order="9" visible="true" weight="0.53412783" />
+      <window_info anchor="bottom" id="Python Console" order="9" weight="0.41495124" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
@@ -314,6 +431,20 @@
       </breakpoints>
     </breakpoint-manager>
   </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>len(train_generator)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>len(validation_generator)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/Anaconda2/envs/cea/Lib/site-packages/pandas/core/common.py" />
     <entry file="file://$USER_HOME$/Anaconda2/envs/cea/Lib/site-packages/pandas/core/frame.py" />
@@ -345,10 +476,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/chatbot/chatbot_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="64" selection-start-line="11" selection-start-column="64" selection-end-line="11" selection-end-column="64" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/keras/engine/training.py" />
+    <entry file="file://$USER_HOME$/Anaconda3/envs/machinelearning/Lib/site-packages/pandas/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/Pror_guru_kaggle_assignment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="23" selection-start-line="23" selection-end-line="29" selection-end-column="46" />
+          <folding>
+            <element signature="e#1#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/furthering_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="86" lean-forward="true" selection-start-line="86" selection-end-line="86" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" lean-forward="true" selection-end-line="182" selection-end-column="104" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/art-transfer-deep-learning/deep-learning-main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="27" column="95" selection-start-line="27" selection-start-column="95" selection-end-line="27" selection-end-column="95" />
+        <state relative-caret-position="221">
+          <caret line="15" column="37" selection-start-line="15" selection-end-line="16" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -358,12 +533,77 @@
     <entry file="file://$PROJECT_DIR$/chatbot/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/chatbot/chatbot_test.py">
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/loss_plottext.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/loss_plotfloorplan.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/accuracy_plottext.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/accuracy_plotfloorplan.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="64" selection-start-line="11" selection-start-column="64" selection-end-line="11" selection-end-column="64" />
+        <state relative-caret-position="2176">
+          <caret line="137" column="19" selection-start-line="137" selection-start-column="19" selection-end-line="137" selection-end-column="19" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/multiple_file_classification.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1972">
+          <caret line="129" column="1" selection-start-line="129" selection-start-column="1" selection-end-line="129" selection-end-column="1" />
+          <folding>
+            <element signature="e#1#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1309">
+          <caret line="83" column="44" selection-start-line="83" selection-start-column="44" selection-end-line="83" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/image_predictor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1241">
+          <caret line="86" selection-start-line="86" selection-end-line="86" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/loss_plotmap.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/accuracy_plotmap.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/rotating_images.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="131" selection-start-line="131" selection-end-line="131" />
+          <folding>
+            <element signature="e#1#20#0" expanded="true" />
           </folding>
         </state>
       </provider>

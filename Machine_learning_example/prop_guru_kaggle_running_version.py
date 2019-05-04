@@ -7,6 +7,7 @@ from keras.layers. normalization import BatchNormalization
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
 train = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\imgs_train.csv')    # reading the csv file
 
@@ -80,6 +81,10 @@ predictive_model.add(Dropout(0.2))
 predictive_model.add(Flatten())
 predictive_model.add(Dense(256, activation='relu'))
 predictive_model.add(Dropout(0.2))
+predictive_model.add(Dense(512, activation='relu'))
+predictive_model.add(Dropout(0.2))
+predictive_model.add(Dense(256, activation='relu'))
+predictive_model.add(Dropout(0.2))
 predictive_model.add(Dense(128, activation='relu'))
 predictive_model.add(Dense(7, activation = 'sigmoid'))
 
@@ -104,7 +109,7 @@ train_generator = datagen.flow(x_train, y_train, batch_size=batch_size)
 
 
 # fits the model on batches with real-time data augmentation:
-predictive_model.fit_generator(train_generator, steps_per_epoch=epoch_step, validation_data=(x_validation, y_validation), epochs=epochs, verbose = 1)
+history = predictive_model.fit_generator(train_generator, steps_per_epoch=epoch_step, validation_data=(x_validation, y_validation), epochs=epochs, verbose = 1)
 
 
 # predictive_model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, verbose = 1, validation_split = 0.2)
@@ -123,6 +128,24 @@ print("Saved model to disk")
 
 scores = predictive_model.evaluate(data, labels, verbose=1)
 print("%s: %.2f%%" % (predictive_model.metrics_names[1], scores[1] * 100))
+
+print(history.history.keys())
+#  "Accuracy"
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'validation'], loc='upper left')
+plt.savefig('accuracy_plot' + input + '.png')
+# "Loss"
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'validation'], loc='upper left')
+plt.savefig('loss_plot' + input + '.png')
 
 
 

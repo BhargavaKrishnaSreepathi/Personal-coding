@@ -1,30 +1,20 @@
 
 import pandas as pd
-import math
-import numpy as np
 import matplotlib.pyplot as plt
-import tensorflow as tf
-from tensorflow.python.framework import ops
 import imageio
-import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers. normalization import BatchNormalization
 import numpy as np
-from keras.models import model_from_json
-from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
+
 
 def custom_classification(input):
 
     train = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\imgs_train.csv')    # reading the csv file
     train.head()      # printing first five rows of the file
-
-    train[input] = np.zeros(len(train))
 
     x_train_original = []
     IMG_SIZE = 299
@@ -70,16 +60,20 @@ def custom_classification(input):
 
     predictive_model.compile(loss='binary_crossentropy', optimizer='adam', metrics = ['accuracy'])
 
-    datagen = ImageDataGenerator(shear_range=0.2,
-                                 zoom_range=0.2,
-                                 horizontal_flip=True,
-                                 vertical_flip=True)
+    datagen = ImageDataGenerator(rescale=1./255.,
+                             rotation_range=20,
+                             width_shift_range=0.2,
+                             height_shift_range=0.2,
+                             horizontal_flip=True,
+                             shear_range=0.2,
+                             zoom_range=0.2,
+                             vertical_flip=True)
     #
     # # compute quantities required for featurewise normalization
     # # (std, mean, and principal components if ZCA whitening is applied)
     # datagen.fit(x_train)
 
-    epochs = 40
+    epochs = 100
     batch_size = 100
     epoch_step = len(x_train) / batch_size
 
@@ -87,7 +81,7 @@ def custom_classification(input):
 
 
     # fits the model on batches with real-time data augmentation:
-    predictive_model.fit_generator(train_generator, steps_per_epoch=epoch_step, validation_data=(x_test, y_test), epochs=epochs, verbose = 1)
+    history = predictive_model.fit_generator(train_generator, steps_per_epoch=epoch_step, validation_data=(x_test, y_test), epochs=epochs, verbose = 1)
 
 
     # predictive_model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, verbose = 1, validation_split = 0.2)
@@ -105,6 +99,24 @@ def custom_classification(input):
     # serialize weights to HDF5
     predictive_model.save_weights("model_data_validation_final_" + input + ".h5")
     print("Saved model to disk")
+
+    print(history.history.keys())
+    #  "Accuracy"
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.savefig('accuracy_plot' + input + '.png')
+    # "Loss"
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.savefig('loss_plot' + input + '.png')
 
 
 # class_labels = ['text', 'floorplan', 'map', 'face', 'collage', 'property', 'siteplan']
