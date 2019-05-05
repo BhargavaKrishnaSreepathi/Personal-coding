@@ -91,18 +91,11 @@ predictive_model.add(Dense(7, activation = 'sigmoid'))
 predictive_model.compile(loss='binary_crossentropy', optimizer='adam', metrics = ['accuracy'])
 
 datagen = ImageDataGenerator(rescale=1./255.,
-                             featurewise_center=True,
-                             featurewise_std_normalization=True,
-                             rotation_range=20,
-                             width_shift_range=0.2,
-                             height_shift_range=0.2,
                              horizontal_flip=True,
-                             shear_range=0.2,
-                             zoom_range=0.2,
                              vertical_flip=True)
 
 epochs = 250
-batch_size = 50
+batch_size = 100
 epoch_step = len(x_train) / batch_size
 
 train_generator = datagen.flow(x_train, y_train, batch_size=batch_size)
@@ -119,10 +112,10 @@ print ('done')
 
 # serialize model to JSON
 model_json = predictive_model.to_json()
-with open("model_data_validation_final_all.json", "w") as json_file:
+with open("model_data_validation_final_all_2.json", "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
-predictive_model.save_weights("model_data_validation_final_all.h5")
+predictive_model.save_weights("model_data_validation_final_all_2.h5")
 print("Saved model to disk")
 
 
@@ -137,7 +130,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('accuracy_plot' + input + '.png')
+plt.savefig('accuracy_plot.png')
 # "Loss"
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
@@ -145,7 +138,7 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('loss_plot' + input + '.png')
+plt.savefig('loss_plot.png')
 
 
 
