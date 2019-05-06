@@ -38,6 +38,7 @@ for i in range(len(test)):
 
 testImages = np.array([i[0] for i in test_data_original]).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
 image_ids = np.array(image_id)
+print (len(test_data_original))
 
 
 # datagen = ImageDataGenerator()
@@ -53,7 +54,7 @@ epoch_step = len(testImages) / batch_size
 pred=loaded_model.predict(testImages)
 
 
-pred_bool = (pred >0.5)
+pred_bool = (pred >0.4)
 predictions = pred_bool.astype(int)
 
 
@@ -109,7 +110,7 @@ print ('saved the predictions')
 combined_labels = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\labelled_model_data_validation_final_all.csv')
 
 combined_text = []
-
+bhar = 0
 
 for i in range(len(combined_labels)):
     c = ''
@@ -157,9 +158,11 @@ for i in range(len(combined_labels)):
 
     if len(c) == 0:
         c = 'text'
+        bhar = bhar + 1
     combined_text.append(c)
 
 z = np.array(combined_text)
 
 df = pd.DataFrame({'images_id': combined_labels['images_id'], 'labels': z})
 df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\submission_all_4.csv')
+print (bhar)

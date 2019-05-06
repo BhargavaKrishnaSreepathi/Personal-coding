@@ -75,29 +75,29 @@ def custom_classification(input):
     predictive_model.save_weights("model_data_validation_final_" + input + "_4.h5")
     print("Saved model to disk")
 
-    print(history.history.keys())
-    #  "Accuracy"
-    plt.plot(history.history['acc'])
-    plt.plot(history.history['val_acc'])
-    plt.title('model accuracy')
-    plt.ylabel('accuracy')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'validation'], loc='upper left')
-    plt.savefig('accuracy_plot_' + input + '_4.png')
-    # "Loss"
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'validation'], loc='upper left')
-    plt.savefig('loss_plot_' + input + '_4.png')
+    # print(history.history.keys())
+    # #  "Accuracy"
+    # plt.plot(history.history['acc'])
+    # # plt.plot(history.history['val_acc'])
+    # plt.title('model accuracy')
+    # plt.ylabel('accuracy')
+    # plt.xlabel('epoch')
+    # plt.legend(['train', 'validation'], loc='upper left')
+    # plt.savefig('accuracy_plot_' + input + '_4.png')
+    # # "Loss"
+    # plt.plot(history.history['loss'])
+    # # plt.plot(history.history['val_loss'])
+    # plt.title('model loss')
+    # plt.ylabel('loss')
+    # plt.xlabel('epoch')
+    # plt.legend(['train', 'validation'], loc='upper left')
+    # plt.savefig('loss_plot_' + input + '_4.png')
 
 
 # class_labels = ['text', 'floorplan', 'map', 'face', 'collage', 'property', 'siteplan']
 
-custom_classification('text')
-custom_classification('floorplan')
+# custom_classification('text')
+# custom_classification('floorplan')
 custom_classification('map')
 custom_classification('face')
 custom_classification('collage')

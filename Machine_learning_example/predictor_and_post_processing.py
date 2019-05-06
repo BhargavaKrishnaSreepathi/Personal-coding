@@ -19,12 +19,12 @@ from keras.preprocessing.image import ImageDataGenerator
 # class_labels = ['text', 'floorplan', 'map', 'face', 'collage', 'property', 'siteplan']
 
 def predictor(input):
-    json_file = open(r'C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_' + input + '_2.json', 'r')
+    json_file = open(r'C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_' + input + '_4.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
     # load weights into new model
-    loaded_model.load_weights(r"C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_" + input + "_2.h5")
+    loaded_model.load_weights(r"C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_" + input + "_4.h5")
     print("Loaded model from disk")
 
     test = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\test_set.csv')    # reading the csv file
@@ -89,7 +89,7 @@ def predictor(input):
 
 
     df1 = pd.DataFrame({'images_id': bh,'text': bh1})
-    df1.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\labelled_model_data_validation_final_' + input + '_2.csv')
+    df1.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\labelled_model_data_validation_final_' + input + '_4.csv')
     print ('saved the predictions')
 #
 predictor('floorplan')
@@ -100,60 +100,60 @@ predictor('property')
 predictor('collage')
 predictor('text')
 # labelled_model_data_validation_final_all
-combined_labels = pd.read_excel(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\Combined labelling separate.xlsx')
-
-combined_text = []
-
-
-for i in range(len(combined_labels)):
-    c = ''
-    if combined_labels.loc[i,'text'] == 1:
-        if len(c) == 0:
-            c = c + 'text'
-        else:
-            c = c + ' text'
-
-    if combined_labels.loc[i,'floorplan'] == 1:
-        if len(c) == 0:
-            c = c + 'floorplan'
-        else:
-            c = c + ' floorplan'
-
-    if combined_labels.loc[i,'map'] == 1:
-        if len(c) == 0:
-            c = c + 'map'
-        else:
-            c = c + ' map'
-
-    if combined_labels.loc[i,'face'] == 1:
-        if len(c) == 0:
-            c = c + 'face'
-        else:
-            c = c + ' face'
-
-    if combined_labels.loc[i,'collage'] == 1:
-        if len(c) == 0:
-            c = c + 'collaged'
-        else:
-            c = c + ' collaged'
-
-    if combined_labels.loc[i,'property'] == 1:
-        if len(c) == 0:
-            c = c + 'property'
-        else:
-            c = c + ' property'
-
-    if combined_labels.loc[i,'siteplan'] == 1:
-        if len(c) == 0:
-            c = c + 'siteplan'
-        else:
-            c = c + ' siteplan'
-
-    if len(c) == 0:
-        c = 'text'
-    combined_text.append(c)
-
-z = np.array(combined_text)
-
-df = pd.DataFrame({'images_id': combined_labels['images_id'], 'labels': z})
-df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\submission_separate.csv')
+# combined_labels = pd.read_excel(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\Combined labelling separate.xlsx')
+#
+# combined_text = []
+#
+#
+# for i in range(len(combined_labels)):
+#     c = ''
+#     if combined_labels.loc[i,'text'] == 1:
+#         if len(c) == 0:
+#             c = c + 'text'
+#         else:
+#             c = c + ' text'
+#
+#     if combined_labels.loc[i,'floorplan'] == 1:
+#         if len(c) == 0:
+#             c = c + 'floorplan'
+#         else:
+#             c = c + ' floorplan'
+#
+#     if combined_labels.loc[i,'map'] == 1:
+#         if len(c) == 0:
+#             c = c + 'map'
+#         else:
+#             c = c + ' map'
+#
+#     if combined_labels.loc[i,'face'] == 1:
+#         if len(c) == 0:
+#             c = c + 'face'
+#         else:
+#             c = c + ' face'
+#
+#     if combined_labels.loc[i,'collage'] == 1:
+#         if len(c) == 0:
+#             c = c + 'collaged'
+#         else:
+#             c = c + ' collaged'
+#
+#     if combined_labels.loc[i,'property'] == 1:
+#         if len(c) == 0:
+#             c = c + 'property'
+#         else:
+#             c = c + ' property'
+#
+#     if combined_labels.loc[i,'siteplan'] == 1:
+#         if len(c) == 0:
+#             c = c + 'siteplan'
+#         else:
+#             c = c + ' siteplan'
+#
+#     if len(c) == 0:
+#         c = 'text'
+#     combined_text.append(c)
+#
+# z = np.array(combined_text)
+#
+# df = pd.DataFrame({'images_id': combined_labels['images_id'], 'labels': z})
+# df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\submission_separate_4.csv')
