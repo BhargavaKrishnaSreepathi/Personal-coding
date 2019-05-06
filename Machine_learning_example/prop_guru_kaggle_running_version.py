@@ -5,7 +5,6 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers. normalization import BatchNormalization
 import numpy as np
-from keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
@@ -55,10 +54,10 @@ for i in range(len(train)):
     if len(arr.shape) > 2:
         x_train_original.append([np.array(img), (label_text, label_floorplan, label_map, label_face, label_collage, label_property, label_siteplan)])
 
-data = np.array([i[0] for i in x_train_original]).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
-labels = np.array([i[1] for i in x_train_original])
+data_full = np.array([i[0] for i in x_train_original]).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
+labels_full = np.array([i[1] for i in x_train_original])
 
-x_train, x_validation, y_train, y_validation = train_test_split(data, labels, test_size = 0.1)
+x_train, x_validation, y_train, y_validation = train_test_split(data_full, labels_full, test_size = 0.1)
 print ('Data Processed')
 
 predictive_model = Sequential()
@@ -79,38 +78,18 @@ predictive_model.add(MaxPooling2D(pool_size=(2,2)))
 predictive_model.add(BatchNormalization())
 predictive_model.add(Dropout(0.2))
 predictive_model.add(Flatten())
-# predictive_model.add(Dense(256, activation='relu'))
-# predictive_model.add(Dropout(0.2))
-# predictive_model.add(Dense(512, activation='relu'))
-# predictive_model.add(Dropout(0.2))
-# predictive_model.add(Dense(256, activation='relu'))
-# predictive_model.add(Dropout(0.2))
 predictive_model.add(Dense(128, activation='relu'))
 predictive_model.add(Dense(7, activation = 'sigmoid'))
 
 predictive_model.compile(loss='binary_crossentropy', optimizer='adam', metrics = ['accuracy'])
 
-# datagen = ImageDataGenerator(rescale=1./255.,
-#                              horizontal_flip=True,
-#                              vertical_flip=True)
-
-# datagen = ImageDataGenerator()
-
 epochs = 500
 batch_size = 100
 epoch_step = len(x_train) / batch_size
 
-# train_generator = datagen.flow(x_train, y_train, batch_size=batch_size)
-
-
 # fits the model on batches with real-time data augmentation:
-# history = predictive_model.fit_generator(train_generator, steps_per_epoch=epoch_step, validation_data=(x_validation, y_validation), epochs=epochs, verbose = 1)
-history = predictive_model.fit(x_train, y_train, epochs=epochs, verbose = 1)
-
-# predictive_model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, verbose = 1, validation_split = 0.2)
-
-# predictive_model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, verbose = 1, validation_split = 0.2)
-loss, acc = predictive_model.evaluate(x_train, y_train, verbose = 1)
+history = predictive_model.fit(data_full, labels_full, epochs=epochs, verbose = 1)
+loss, acc = predictive_model.evaluate(data_full, labels_full, verbose = 1)
 print (loss, acc)
 print ('done')
 
@@ -122,8 +101,7 @@ with open("model_data_validation_final_all_4.json", "w") as json_file:
 predictive_model.save_weights("model_data_validation_final_all_4.h5")
 print("Saved model to disk")
 
-
-scores = predictive_model.evaluate(data, labels, verbose=1)
+scores = predictive_model.evaluate(data_full, labels_full, verbose=1)
 print("%s: %.2f%%" % (predictive_model.metrics_names[1], scores[1] * 100))
 
 print(history.history.keys())

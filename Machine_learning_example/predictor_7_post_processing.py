@@ -9,12 +9,12 @@ from keras.preprocessing.image import ImageDataGenerator
 # class_labels = ['text', 'floorplan', 'map', 'face', 'collage', 'property', 'siteplan']
 
 
-json_file = open(r'C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_all_2.json', 'r')
+json_file = open(r'C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_all_4.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 # load weights into new model
-loaded_model.load_weights(r"C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_all_2.h5")
+loaded_model.load_weights(r"C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_all_4.h5")
 print("Loaded model from disk")
 
 test = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\test_set.csv')    # reading the csv file
@@ -162,4 +162,4 @@ for i in range(len(combined_labels)):
 z = np.array(combined_text)
 
 df = pd.DataFrame({'images_id': combined_labels['images_id'], 'labels': z})
-df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\submission_all_3.csv')
+df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\submission_all_4.csv')
