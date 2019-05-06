@@ -105,7 +105,7 @@ epoch_step = len(x_train) / batch_size
 
 # fits the model on batches with real-time data augmentation:
 # history = predictive_model.fit_generator(train_generator, steps_per_epoch=epoch_step, validation_data=(x_validation, y_validation), epochs=epochs, verbose = 1)
-history = predictive_model.fit(x_train, y_train, epochs=epochs, verbose = 1, validation_split=0.05)
+history = predictive_model.fit(x_train, y_train, epochs=epochs, verbose = 1)
 
 # predictive_model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, verbose = 1, validation_split = 0.2)
 
@@ -116,10 +116,10 @@ print ('done')
 
 # serialize model to JSON
 model_json = predictive_model.to_json()
-with open("model_data_validation_final_all_3.json", "w") as json_file:
+with open("model_data_validation_final_all_4.json", "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
-predictive_model.save_weights("model_data_validation_final_all_3.h5")
+predictive_model.save_weights("model_data_validation_final_all_4.h5")
 print("Saved model to disk")
 
 
@@ -134,7 +134,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('accuracy_plot_3.png')
+plt.savefig('accuracy_plot_4.png')
 # "Loss"
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
@@ -142,7 +142,7 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('loss_plot_3.png')
+plt.savefig('loss_plot_4.png')
 
 
 
