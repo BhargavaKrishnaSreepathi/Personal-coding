@@ -58,7 +58,7 @@ for i in range(len(train)):
 data = np.array([i[0] for i in x_train_original]).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
 labels = np.array([i[1] for i in x_train_original])
 
-x_train, x_validation, y_train, y_validation = train_test_split(data, labels, test_size = 0.2)
+x_train, x_validation, y_train, y_validation = train_test_split(data, labels, test_size = 0.1)
 print ('Data Processed')
 
 predictive_model = Sequential()
@@ -79,31 +79,35 @@ predictive_model.add(MaxPooling2D(pool_size=(2,2)))
 predictive_model.add(BatchNormalization())
 predictive_model.add(Dropout(0.2))
 predictive_model.add(Flatten())
-predictive_model.add(Dense(256, activation='relu'))
-predictive_model.add(Dropout(0.2))
-predictive_model.add(Dense(512, activation='relu'))
-predictive_model.add(Dropout(0.2))
-predictive_model.add(Dense(256, activation='relu'))
-predictive_model.add(Dropout(0.2))
+# predictive_model.add(Dense(256, activation='relu'))
+# predictive_model.add(Dropout(0.2))
+# predictive_model.add(Dense(512, activation='relu'))
+# predictive_model.add(Dropout(0.2))
+# predictive_model.add(Dense(256, activation='relu'))
+# predictive_model.add(Dropout(0.2))
 predictive_model.add(Dense(128, activation='relu'))
 predictive_model.add(Dense(7, activation = 'sigmoid'))
 
 predictive_model.compile(loss='binary_crossentropy', optimizer='adam', metrics = ['accuracy'])
 
-datagen = ImageDataGenerator(rescale=1./255.,
-                             horizontal_flip=True,
-                             vertical_flip=True)
+# datagen = ImageDataGenerator(rescale=1./255.,
+#                              horizontal_flip=True,
+#                              vertical_flip=True)
 
-epochs = 250
+# datagen = ImageDataGenerator()
+
+epochs = 500
 batch_size = 100
 epoch_step = len(x_train) / batch_size
 
-train_generator = datagen.flow(x_train, y_train, batch_size=batch_size)
+# train_generator = datagen.flow(x_train, y_train, batch_size=batch_size)
 
 
 # fits the model on batches with real-time data augmentation:
-history = predictive_model.fit_generator(train_generator, steps_per_epoch=epoch_step, validation_data=(x_validation, y_validation), epochs=epochs, verbose = 1)
+# history = predictive_model.fit_generator(train_generator, steps_per_epoch=epoch_step, validation_data=(x_validation, y_validation), epochs=epochs, verbose = 1)
+history = predictive_model.fit(x_train, y_train, epochs=epochs, verbose = 1, validation_split=0.05)
 
+# predictive_model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, verbose = 1, validation_split = 0.2)
 
 # predictive_model.fit(x_train, y_train, batch_size = batch_size, epochs = epochs, verbose = 1, validation_split = 0.2)
 loss, acc = predictive_model.evaluate(x_train, y_train, verbose = 1)
@@ -112,10 +116,10 @@ print ('done')
 
 # serialize model to JSON
 model_json = predictive_model.to_json()
-with open("model_data_validation_final_all_2.json", "w") as json_file:
+with open("model_data_validation_final_all_3.json", "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
-predictive_model.save_weights("model_data_validation_final_all_2.h5")
+predictive_model.save_weights("model_data_validation_final_all_3.h5")
 print("Saved model to disk")
 
 
@@ -130,7 +134,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('accuracy_plot.png')
+plt.savefig('accuracy_plot_3.png')
 # "Loss"
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
@@ -138,7 +142,7 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('loss_plot.png')
+plt.savefig('loss_plot_3.png')
 
 
 

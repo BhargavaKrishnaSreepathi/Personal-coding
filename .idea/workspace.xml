@@ -2,20 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8ec9d6e4-8a45-43e8-8520-c663d01d9909" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Personal-coding.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Personal-coding.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all.h5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_face.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_face.h5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_face.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_face.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_floorplan.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_floorplan.h5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_floorplan.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_floorplan.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_map.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_map.h5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_map.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_map.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_text.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_text.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all_2.h5" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all_2.h5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all_2.json" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/model_data_validation_final_all_2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Machine_learning_example/rotating_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/Machine_learning_example/rotating_images.py" afterDir="false" />
     </list>
@@ -32,11 +23,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2176">
-              <caret line="137" column="19" selection-start-line="137" selection-start-column="19" selection-end-line="137" selection-end-column="19" />
+            <state relative-caret-position="319">
+              <caret line="98" column="10" selection-start-line="98" selection-start-column="10" selection-end-line="98" selection-end-column="10" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="102" selection-start-line="102" selection-end-line="158" selection-end-column="109" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -56,11 +59,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Machine_learning_example/rotating_images.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="131" selection-start-line="131" selection-end-line="131" />
+            <state relative-caret-position="544">
+              <caret line="68" column="20" lean-forward="true" selection-start-line="68" selection-start-column="20" selection-end-line="68" selection-end-column="20" />
               <folding>
                 <element signature="e#1#20#0" expanded="true" />
               </folding>
@@ -71,7 +74,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1309">
+            <state relative-caret-position="438">
               <caret line="83" column="44" selection-start-line="83" selection-start-column="44" selection-end-line="83" selection-end-column="44" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -83,8 +86,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" selection-start-line="3" selection-end-line="3" />
+            <state relative-caret-position="370">
+              <caret line="164" column="100" selection-start-line="164" selection-start-column="100" selection-end-line="164" selection-end-column="100" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -131,17 +137,17 @@
         <option value="$PROJECT_DIR$/Machine_learning_example/image_predictor.py" />
         <option value="$PROJECT_DIR$/Machine_learning_example/multiple_file_classification.py" />
         <option value="$PROJECT_DIR$/Machine_learning_example/furthering_model.py" />
-        <option value="$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py" />
-        <option value="$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py" />
         <option value="$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py" />
         <option value="$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py" />
+        <option value="$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py" />
         <option value="$PROJECT_DIR$/Machine_learning_example/rotating_images.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1170" />
-    <option name="y" value="30" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
     <option name="width" value="820" />
     <option name="height" value="1000" />
   </component>
@@ -150,7 +156,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -182,6 +187,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -211,7 +217,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.rotating_images">
+  <component name="RunManager" selected="Python.prop_guru_kaggle_running_version">
     <configuration default="true" type="js.build_tools.gulp">
       <node-interpreter>project</node-interpreter>
       <node-options />
@@ -350,11 +356,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.prop_guru_kaggle_running_version" />
+        <item itemvalue="Python.predictor_7_post_processing" />
+        <item itemvalue="Python.predictor_and_post_processing" />
         <item itemvalue="Python.rotating_images" />
         <item itemvalue="Python.furthering_7_model" />
-        <item itemvalue="Python.predictor_7_post_processing" />
-        <item itemvalue="Python.prop_guru_kaggle_running_version" />
-        <item itemvalue="Python.predictor_and_post_processing" />
       </list>
     </recent_temporary>
   </component>
@@ -381,13 +387,13 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2028451" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2028451" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.43336946" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.26327193" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.43336946" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.36836404" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -510,16 +516,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" lean-forward="true" selection-end-line="182" selection-end-column="104" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/art-transfer-deep-learning/deep-learning-main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -545,15 +541,11 @@
     <entry file="file://$PROJECT_DIR$/Machine_learning_example/accuracy_plotfloorplan.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2176">
-          <caret line="137" column="19" selection-start-line="137" selection-start-column="19" selection-end-line="137" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/loss_plotmap.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/accuracy_plotmap.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Machine_learning_example/multiple_file_classification.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -562,23 +554,6 @@
           <folding>
             <element signature="e#1#20#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1309">
-          <caret line="83" column="44" selection-start-line="83" selection-start-column="44" selection-end-line="83" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
     </entry>
@@ -592,18 +567,61 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Machine_learning_example/loss_plotmap.png">
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/accuracy_plotcollage.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Machine_learning_example/accuracy_plotmap.png">
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/accuracy_plot_text_2.png">
       <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/loss_plot_text_2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_and_post_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="102" selection-start-line="102" selection-end-line="158" selection-end-column="109" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/furthering_7_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="438">
+          <caret line="83" column="44" selection-start-line="83" selection-start-column="44" selection-end-line="83" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Machine_learning_example/rotating_images.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="131" selection-start-line="131" selection-end-line="131" />
+        <state relative-caret-position="544">
+          <caret line="68" column="20" lean-forward="true" selection-start-line="68" selection-start-column="20" selection-end-line="68" selection-end-column="20" />
           <folding>
             <element signature="e#1#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/predictor_7_post_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="370">
+          <caret line="164" column="100" selection-start-line="164" selection-start-column="100" selection-end-line="164" selection-end-column="100" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Machine_learning_example/prop_guru_kaggle_running_version.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="98" column="10" selection-start-line="98" selection-start-column="10" selection-end-line="98" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
