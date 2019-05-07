@@ -8,7 +8,12 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
-train = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\imgs_train.csv')    # reading the csv file
+__author__ = "Sreepathi Bhargava Krishna"
+__credits__ = ["Sreepathi Bhargava Krishna"]
+__email__ = "s.bhargava.krishna@gmail.com"
+__status__ = "Made for the Assessment"
+
+train = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\imgs_train_updated.csv')    # reading the csv file
 
 x_train_original = []
 IMG_SIZE = 299
@@ -57,48 +62,53 @@ for i in range(len(train)):
 data_full = np.array([i[0] for i in x_train_original]).reshape(-1, IMG_SIZE, IMG_SIZE, 3)
 labels_full = np.array([i[1] for i in x_train_original])
 
-x_train, x_validation, y_train, y_validation = train_test_split(data_full, labels_full, test_size = 0.1)
+x_train, x_validation, y_train, y_validation = train_test_split(data_full, labels_full, test_size = 0.2)
 print ('Data Processed')
 
 predictive_model = Sequential()
 predictive_model.add(Conv2D(32, kernel_size = (3, 3), activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 3)))
 predictive_model.add(MaxPooling2D(pool_size=(2,2)))
 predictive_model.add(BatchNormalization())
+
 predictive_model.add(Conv2D(64, kernel_size=(3,3), activation='relu'))
 predictive_model.add(MaxPooling2D(pool_size=(2,2)))
 predictive_model.add(BatchNormalization())
+
 predictive_model.add(Conv2D(96, kernel_size=(3,3), activation='relu'))
 predictive_model.add(MaxPooling2D(pool_size=(2,2)))
 predictive_model.add(BatchNormalization())
+
 predictive_model.add(Conv2D(96, kernel_size=(3,3), activation='relu'))
 predictive_model.add(MaxPooling2D(pool_size=(2,2)))
 predictive_model.add(BatchNormalization())
+
 predictive_model.add(Conv2D(64, kernel_size=(3,3), activation='relu'))
 predictive_model.add(MaxPooling2D(pool_size=(2,2)))
 predictive_model.add(BatchNormalization())
 predictive_model.add(Dropout(0.2))
 predictive_model.add(Flatten())
+
 predictive_model.add(Dense(128, activation='relu'))
 predictive_model.add(Dense(7, activation = 'sigmoid'))
 
 predictive_model.compile(loss='binary_crossentropy', optimizer='adam', metrics = ['accuracy'])
 
-epochs = 500
+epochs = 5
 batch_size = 100
 epoch_step = len(x_train) / batch_size
 
 # fits the model on batches with real-time data augmentation:
-history = predictive_model.fit(data_full, labels_full, epochs=epochs, verbose = 1)
+history = predictive_model.fit(x_train, y_train, epochs=epochs, verbose = 1, validation_data=(x_validation, y_validation))
 loss, acc = predictive_model.evaluate(data_full, labels_full, verbose = 1)
 print (loss, acc)
 print ('done')
 
 # serialize model to JSON
 model_json = predictive_model.to_json()
-with open("model_data_validation_final_all_4.json", "w") as json_file:
+with open("model_data_validation_final_all_7.json", "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
-predictive_model.save_weights("model_data_validation_final_all_4.h5")
+predictive_model.save_weights("model_data_validation_final_all_7.h5")
 print("Saved model to disk")
 
 scores = predictive_model.evaluate(data_full, labels_full, verbose=1)
@@ -112,7 +122,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('accuracy_plot_4.png')
+plt.savefig('accuracy_plot_7.png')
 # "Loss"
 plt.plot(history.history['loss'])
 # plt.plot(history.history['val_loss'])
@@ -120,7 +130,7 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('loss_plot_4.png')
+plt.savefig('loss_plot_7.png')
 
 
 

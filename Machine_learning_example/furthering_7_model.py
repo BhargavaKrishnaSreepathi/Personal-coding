@@ -6,6 +6,10 @@ from keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
+__author__ = "Sreepathi Bhargava Krishna"
+__credits__ = ["Sreepathi Bhargava Krishna"]
+__email__ = "s.bhargava.krishna@gmail.com"
+__status__ = "Made for the Assessment"
 
 json_file = open(
     r'C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_all.json', 'r')

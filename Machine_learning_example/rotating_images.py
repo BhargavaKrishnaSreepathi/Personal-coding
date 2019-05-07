@@ -9,6 +9,10 @@ import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split
 
+__author__ = "Sreepathi Bhargava Krishna"
+__credits__ = ["Sreepathi Bhargava Krishna"]
+__email__ = "s.bhargava.krishna@gmail.com"
+__status__ = "Made for the Assessment"
 
 def custom_classification(input):
 

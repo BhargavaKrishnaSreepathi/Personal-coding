@@ -14,6 +14,10 @@ from keras.layers. normalization import BatchNormalization
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 
+__author__ = "Sreepathi Bhargava Krishna"
+__credits__ = ["Sreepathi Bhargava Krishna"]
+__email__ = "s.bhargava.krishna@gmail.com"
+__status__ = "Made for the Assessment"
 
 # load json and create model
 # class_labels = ['text', 'floorplan', 'map', 'face', 'collage', 'property', 'siteplan']
@@ -100,60 +104,62 @@ predictor('property')
 predictor('collage')
 predictor('text')
 # labelled_model_data_validation_final_all
-# combined_labels = pd.read_excel(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\Combined labelling separate.xlsx')
-#
-# combined_text = []
-#
-#
-# for i in range(len(combined_labels)):
-#     c = ''
-#     if combined_labels.loc[i,'text'] == 1:
-#         if len(c) == 0:
-#             c = c + 'text'
-#         else:
-#             c = c + ' text'
-#
-#     if combined_labels.loc[i,'floorplan'] == 1:
-#         if len(c) == 0:
-#             c = c + 'floorplan'
-#         else:
-#             c = c + ' floorplan'
-#
-#     if combined_labels.loc[i,'map'] == 1:
-#         if len(c) == 0:
-#             c = c + 'map'
-#         else:
-#             c = c + ' map'
-#
-#     if combined_labels.loc[i,'face'] == 1:
-#         if len(c) == 0:
-#             c = c + 'face'
-#         else:
-#             c = c + ' face'
-#
-#     if combined_labels.loc[i,'collage'] == 1:
-#         if len(c) == 0:
-#             c = c + 'collaged'
-#         else:
-#             c = c + ' collaged'
-#
-#     if combined_labels.loc[i,'property'] == 1:
-#         if len(c) == 0:
-#             c = c + 'property'
-#         else:
-#             c = c + ' property'
-#
-#     if combined_labels.loc[i,'siteplan'] == 1:
-#         if len(c) == 0:
-#             c = c + 'siteplan'
-#         else:
-#             c = c + ' siteplan'
-#
-#     if len(c) == 0:
-#         c = 'text'
-#     combined_text.append(c)
-#
-# z = np.array(combined_text)
-#
-# df = pd.DataFrame({'images_id': combined_labels['images_id'], 'labels': z})
-# df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\submission_separate_4.csv')
+combined_labels = pd.read_excel(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\Combined labelling separate_4.xlsx')
+
+combined_text = []
+bhar = 0
+
+for i in range(len(combined_labels)):
+    c = ''
+    if combined_labels.loc[i,'text'] == 1:
+        if len(c) == 0:
+            c = c + 'text'
+        else:
+            c = c + ' text'
+
+    if combined_labels.loc[i,'floorplan'] == 1:
+        if len(c) == 0:
+            c = c + 'floorplan'
+        else:
+            c = c + ' floorplan'
+
+    if combined_labels.loc[i,'map'] == 1:
+        if len(c) == 0:
+            c = c + 'map'
+        else:
+            c = c + ' map'
+
+    if combined_labels.loc[i,'face'] == 1:
+        if len(c) == 0:
+            c = c + 'face'
+        else:
+            c = c + ' face'
+
+    if combined_labels.loc[i,'collage'] == 1:
+        if len(c) == 0:
+            c = c + 'collaged'
+        else:
+            c = c + ' collaged'
+
+    if combined_labels.loc[i,'property'] == 1:
+        if len(c) == 0:
+            c = c + 'property'
+        else:
+            c = c + ' property'
+
+    if combined_labels.loc[i,'siteplan'] == 1:
+        if len(c) == 0:
+            c = c + 'siteplan'
+        else:
+            c = c + ' siteplan'
+
+    if len(c) == 0:
+        c = 'text'
+        bhar = bhar + 1
+    combined_text.append(c)
+
+z = np.array(combined_text)
+
+df = pd.DataFrame({'images_id': combined_labels['images_id'], 'labels': z})
+df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\submission_separate_4.csv')
+print (bhar)
