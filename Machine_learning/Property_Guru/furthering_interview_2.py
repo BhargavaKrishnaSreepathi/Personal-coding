@@ -123,9 +123,3 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 plt.savefig('loss_plot_bw_further.png')
 
-
-
-
-
-
-
