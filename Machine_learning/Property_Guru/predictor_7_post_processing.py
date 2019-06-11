@@ -13,12 +13,12 @@ __status__ = "Made for the Assessment"
 # class_labels = ['text', 'floorplan', 'map', 'face', 'collage', 'property', 'siteplan']
 
 
-json_file = open(r'C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_all_7.json', 'r')
+json_file = open(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Assignment-Sreepathi Bhargava Krishna\Task 2\model_data_validation_final_all.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 # load weights into new model
-loaded_model.load_weights(r"C:\Users\krish\Documents\GitHub\Personal-coding\Machine_learning_example\model_data_validation_final_all_7.h5")
+loaded_model.load_weights(r"C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Assignment-Sreepathi Bhargava Krishna\Task 2\model_data_validation_final_all.h5")
 print("Loaded model from disk")
 
 test = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\test_set.csv')    # reading the csv file
@@ -108,10 +108,10 @@ for i in range(len(test)):
 
 
 df1 = pd.DataFrame({'images_id': bh,'text': text1, 'floorplan': floorplan1, 'map': map1, 'face': face1, 'collage': collage1, 'property': property1, 'siteplan': siteplan1})
-df1.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\labelled_model_data_validation_final_all.csv')
+df1.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Assignment-Sreepathi Bhargava Krishna\Task 2\labelled_model_data_validation_final_all.csv')
 print ('saved the predictions')
 
-combined_labels = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\labelled_model_data_validation_final_all.csv')
+combined_labels = pd.read_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Assignment-Sreepathi Bhargava Krishna\Task 2\labelled_model_data_validation_final_all.csv')
 
 combined_text = []
 bhar = 0
@@ -161,12 +161,12 @@ for i in range(len(combined_labels)):
             c = c + ' siteplan'
 
     if len(c) == 0:
-        c = 'text'
+        c = 'property'
         bhar = bhar + 1
     combined_text.append(c)
 
 z = np.array(combined_text)
 
 df = pd.DataFrame({'images_id': combined_labels['images_id'], 'labels': z})
-df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Trained_models\submission_all_7_0_2.csv')
+df.to_csv(r'C:\Users\krish\Desktop\Property Guru\pg-image-moderation\Assignment-Sreepathi Bhargava Krishna\Task 2\submission_all_7_0_2.csv')
 print (bhar)
